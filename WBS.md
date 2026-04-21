@@ -77,5 +77,6 @@
 - [x] Task 10.2: Production build and signed APK generation @done(2026-04-21)
 - [x] Task 10.3: Play Store Bundle (AAB) generation @done(2026-04-21)
 - [x] Task 10.6: High-impact (Viral) README generation @done(2026-04-21)
+- [x] Task 10.7: Marketing Website (Landing, Privacy, Terms) @done(2026-04-21)
 - [ ] Task 10.4: App Store (iOS) integration
 - [ ] Task 10.5: Store metadata and screenshots preparation
