@@ -1,0 +1,60 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  line-height: 1.6;
+  color: #334155;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #10b981;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 8px 0;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #064e3b;
+  margin-bottom: 32px;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.section p {
+  margin-bottom: 16px;
+}
+
+.section ul {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+
+.section li {
+  margin-bottom: 8px;
+}
+
+.footer {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 14px;
+  color: #64748b;
+}

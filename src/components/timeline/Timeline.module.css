@@ -1,0 +1,195 @@
+.timelineContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--slate-50);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.timelineHeader {
+  padding: 32px 24px 16px;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+
+.timelineTitle {
+  font-size: 24px;
+  margin: 0;
+}
+
+.timelineSubtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  padding-bottom: 120px;
+  scroll-behavior: smooth;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Spine removed for decluttering as per IA request */
+
+.nodeWrapper {
+  margin-bottom: 40px;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.nodeFocus {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+.ageGroupLabel {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-400);
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+.milestoneCard {
+  background-color: var(--white);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nodeFocus .milestoneCard {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.milestoneTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--slate-800);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.detailsContainer {
+  margin-bottom: 12px;
+}
+
+.details {
+  border: 1px solid var(--slate-100);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.summary {
+  padding: 12px 16px;
+  background-color: var(--slate-100);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-700);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.detailsContent {
+  padding: 12px;
+  border-top: 1px solid var(--slate-100);
+  font-size: 13px;
+  color: var(--slate-600);
+  line-height: 1.5;
+  background-color: white;
+}
+
+.description, .test {
+  margin-bottom: 8px;
+}
+
+.description:last-child, .test:last-child {
+  margin-bottom: 0;
+}
+
+.description strong, .test strong {
+  color: var(--slate-800);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.domainBadge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statusIndicator {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.redFlag {
+  border: 1.5px solid var(--coral);
+  background-color: #fff1f2;
+}
+
+.redFlagTag {
+  background-color: var(--coral);
+  color: white;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 800;
+  position: absolute;
+  top: -10px;
+  right: 20px;
+}
+
+.emptyState {
+  padding: 60px 40px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.fab {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background-color: var(--slate-900);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}

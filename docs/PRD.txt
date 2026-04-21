@@ -1,0 +1,200 @@
+# Grow Baby Grow PRD
+## Milestone Tracker – AIIMS / IAP Guidelines
+**Version 1.0 | April 2026**
+**Platform:** React Progressive Web App (PWA) | Offline-first | Local storage
+**Classification:** Internal Working Document
+**Status:** Draft – Pending Engineering & Clinical Review
+**Tech Stack:** React 18 + Vite | Service Worker | IndexedDB/localStorage | No external runtime dependencies
+**Clinical Source:** AIIMS New Delhi Child Neurology Division + IAP ECD Guidelines
+
+---
+
+## 1. Executive Summary
+**Grow Baby Grow** is an offline-first Progressive Web App (PWA) that enables Indian parents and caregivers to track their child's developmental milestones against AIIMS New Delhi and IAP clinical standards. The app installs directly from the browser, works without internet after the first load, stores all data locally on the device, and requires zero backend infrastructure for v1.
+
+**Problem:** Indian parents lack a trusted, Indian-standard digital tool to monitor developmental milestones. CDC/WHO apps miss India-specific norms and cultural context.
+
+**Solution:** A PWA app pre-loaded with AIIMS milestone data, quiz-driven milestone collection, red-flag alerts, growth charting (WHO 0-5), and paediatrician-ready PDF reports.
+
+**Approach:** Pure React + Vite, Service Worker for offline, IndexedDB for structured data. No external runtime dependencies. Deployable as a static site.
+
+### Key Specs
+| Feature | Detail |
+| :--- | :--- |
+| **Target users** | Indian parents / caregivers of children aged 0–60 months |
+| **Age range** | 0 to 5 years (60 months) |
+| **Clinical standard** | AIIMS New Delhi Child Neurology Division (primary); IAP ECD guidelines (secondary) |
+| **Platform** | Progressive Web App — installable on Android & iOS from browser; desktop supported |
+| **Connectivity** | Offline-first. All core features work without internet after first load |
+| **Data storage** | Client-side only (IndexedDB + localStorage). No cloud upload without explicit consent |
+| **Backend** | None in v1. Static hosting only (Netlify / Vercel / S3+CloudFront) |
+| **Languages** | English v1; Hindi locale v2 |
+| **In-house doctors** | Clinical team reviews all red-flag copy and suggestions before release |
+
+---
+
+## 2. Goals & Success Metrics
+### 2.1 Product goals
+*   **Accuracy** – All milestone data sourced verbatim from AIIMS Child Neurology Division circular; reviewed by in-house paediatricians before release.
+*   **Accessibility** – Works on a 3G Android phone with 2 GB RAM. Total app bundle < 500 KB (gzipped). Lighthouse PWA score > 90.
+*   **Trust** – Non-alarmist language for delays; all red-flag prompts written in partnership with in-house clinical team.
+*   **Privacy** – Zero telemetry by default. Parents own their data. Export and delete at any time.
+*   **Completeness** – Covers all 5 milestone domains (Gross Motor, Fine Motor, Language, Socio-Adaptive, Hearing & Vision) from birth to 60 months.
+
+### 2.2 v1 success metrics
+| Metric | Target | Measurement method | Review cadence |
+| :--- | :--- | :--- | :--- |
+| **Lighthouse PWA score** | >= 90 | CI audit on each deploy | Per release |
+| **Offline functionality** | 100% core features offline | Manual QA checklist | Per release |
+| **Bundle size (gzipped)** | < 500 KB | Vite build report | Per release |
+| **Time to interactive (3G)** | < 4s | WebPageTest / Lighthouse | Per release |
+| **Milestone data accuracy** | 0 clinical errors | In-house doctor sign-off | Before launch |
+| **Red flag copy approval** | 100% reviewed | Clinical sign-off sheet | Before launch |
+| **Data loss incidents** | 0 | User-reported bug tracker | Weekly |
+
+---
+
+## 3. Scope
+### 3.1 In scope – v1 (MVP)
+*   **Child profile creation:** name, date of birth, gender (optional), birth weight, premature flag + gestational age
+*   **Corrected age calculation** for premature babies (auto-applied to all milestone windows)
+*   **Age-based milestone checklists** across 5 domains, pre-loaded with AIIMS data
+*   **Quiz mode:** auto-triggered when a milestone window is entered with no recorded data; manually triggerable at any time
+*   **Manual milestone logging:** parents can mark any milestone achieved with a custom date, notes, and optional photo
+*   **Red flag detection** and in-app alert with consult-paediatrician messaging (no booking in v1)
+*   **Assessment results screen:** milestone-by-milestone IAP comparison with suggestions written by in-house doctors
+*   **Vertical timeline home screen** with past, current, and future milestones
+*   **WHO 0-5 growth chart module:** height, weight, and head circumference plotting with percentile lines
+*   **PDF export:** milestone log + red flags + growth notes, shareable with paediatrician
+*   **Service Worker** for full offline support after first load
+*   **IndexedDB persistence** for all structured data; no data loss on app close
+*   **Install prompt** (Add to Home Screen) on Android and iOS
+
+### 3.2 Explicitly out of scope – v1
+*   Cloud sync or backend (v2)
+*   Paediatrician booking / directory integration (v2)
+*   Hindi language support (v2)
+*   Multiple children profiles (v2; data model must support it from day 1)
+*   Tendril scroll animation (dropped per product decision)
+*   Push notifications / reminders (v2 – requires Web Push API)
+*   Voice read-out / accessibility audio (v2)
+*   Social sharing / WhatsApp keepsake cards (v2)
+
+---
+
+## 4. User Personas
+| Persona | Profile | Key needs |
+| :--- | :--- | :--- |
+| **New parent (urban)** | 28–35 yo, first child, Android/iOS, moderate tech literacy. Googles every milestone. Anxious. | Reassurance, quick check, red-flag clarity, PDF to share with doctor. |
+| **Grandparent caregiver** | 50–65 yo, primary daytime carer in joint family. Feature phone comfort level. | Large text, simple flow, Hindi (v2), minimal navigation. |
+| **Paediatrician / in-house doctor** | Reviewing data shared by parent before clinic visit. | Clean PDF summary, red flags highlighted, growth chart included. |
+| **Parent of premature baby** | Baby born before 37 weeks. High anxiety. Follows corrected age. | Transparent corrected-age logic, extra reassurance copy, nuanced red flags. |
+
+---
+
+## 5. Feature Specifications
+### 5.1 Child profile & onboarding
+Shown on first launch. Single-page form, no account creation required.
+
+| Field | Spec |
+| :--- | :--- |
+| **Baby's name** | Free text, max 40 chars. Used for personalisation throughout. |
+| **Date of birth** | Native date picker. Validates: not in future, not more than 60 months ago. |
+| **Gender** | Optional segmented control: Boy / Girl / Other. Affects WHO growth percentile curve selection. |
+| **Birth weight (kg)** | Numeric, 1 decimal. Optional. Stored for growth chart baseline. |
+| **Born premature?** | Yes / No toggle. Default: No. |
+| **Gestational age** | Shown only if premature = Yes. Integer weeks 23–36. |
+
+**Corrected age rule (AIIMS / IAP):** Apply corrected age for all milestone windows until the child is 24 months chronological age for children born 32–36 weeks, and until 40 months for children born < 32 weeks. A persistent badge labeled "Corrected age" is shown on all milestone and timeline screens when active.
+
+### 5.2 Dashboard (home screen)
+The home screen after profile setup. Shows a real-time summary of the child's developmental status.
+
+*   **Child header:** Avatar, name, exact age in months and days (and corrected age if applicable).
+*   **Domain progress rings:** 4 rings: Gross Motor, Fine Motor, Language, Socio-Adaptive. Green >= 80%, amber 50-79%, red < 50%.
+*   **Current age band card:** Shows active age band (e.g., 4–6 months). Lists milestones due.
+*   **Quiz trigger banner:** Prompt to "Start Milestone Check-in" if unrecorded data exists after 7 days in band.
+*   **Red flag alert banner:** "Consult your paediatrician" persistent banner if red flags detected.
+*   **Growth snapshot:** Latest weight/height plotted against WHO percentile.
+
+### 5.3 Milestone quiz
+Auto-triggers after 7 days in a new age band if unrecorded milestones exist.
+*   **Question structure:** One milestone per screen. Options: "Yes, confidently", "Sometimes", "Not yet", "Not sure".
+*   **Scoring:** Yes = achieved; Sometimes = partial; Not yet = not achieved; Not sure = deferred.
+
+### 5.4 Assessment results screen
+*   **Summary card:** score (e.g., 5/7 on track).
+*   **Badges:** On track (green), Watch (amber), Lagging (red), Partial (purple), Deferred (grey).
+*   **Advisory:** For any Lagging milestone, show "We recommend discussing this with your paediatrician".
+
+### 5.5 Timeline screen
+Vertical scroll representing the child's journey.
+*   **Nodes:** Achieved (green), Most recent (green + ring), Up next (amber), Future (grey).
+
+### 5.7 Red flag detection & alerts
+Complete set pre-loaded from AIIMS circular. Triggers banner and Detail sheet.
+**Red Flag logic examples:**
+*   **Gross Motor:** 9 months: No sitting without support; 18 months: Unable to walk alone.
+*   **Social:** 2 months: No social smile; 12 months: No pointing.
+
+### 5.8 Growth chart module (WHO 0-5)
+Charts: Weight-for-age, Height/Length-for-age, Head circumference-for-age.
+*   Plotted against P3, P15, P50, P85, P97.
+*   Pure React SVG rendering for offline reliability.
+
+### 5.9 PDF export
+Generated entirely on-device via jsPDF. Includes Milestone Log, Red Flags, and Growth Charts.
+
+---
+
+## 6. Data Model
+*   **IndexedDB:** Primary store for profile, logs, quiz, measurements.
+*   **localStorage:** App settings (theme, onboarding flags).
+*   **Cache API:** App shell and static assets (Service Worker).
+
+---
+
+## 7. Technical Architecture
+*   **Stack:** React 18, Vite 5, vite-plugin-pwa (Workbox), idb, jsPDF.
+*   **Zero external runtime dependencies:** All libraries bundled.
+
+---
+
+## 8. UX Specification
+*   **Primary Green:** #1D9E75
+*   **Dark Green:** #085041 (Headings)
+*   **Amber:** #BA7517 (Watch)
+*   **Coral:** #D85A30 (Red Flags)
+*   **Design:** Material Design tokens, responsive, accessible (44px tap targets).
+
+---
+
+## 9. AIIMS Milestone Data Reference
+(Encoded in milestones_aiims.json)
+... [Data tables omitted for brevity in PRD view, refer to source AIIMS circular] ...
+
+---
+
+## 10. Development Plan
+*   **S1 Foundation:** Vite, PWA, IndexedDB, Clinical JSON (Done)
+*   **S2 Onboarding:** Profile, Dashboard (Done)
+*   **S3 Quiz:** Logic & Results (Done)
+*   **S4 Timeline:** SVG Spine, Manual Logs (Done)
+*   **S5 Growth:** WHO Charts, Red Flags, PDF (Done)
+*   **S6 Polish:** PWA Audit, Clinical Final Review (In Progress)
+
+---
+
+## 11. Risks & Mitigations
+*   **Clinical accuracy:** Mitigation: Line-by-line review of JSON against AIIMS circular.
+*   **Data loss:** Mitigation: Offline-first persistence + JSON export/backup.
+
+---
+
+## 13. References
+1. AIIMS New Delhi Child Neurology Division — Developmental Milestones
+2. Indian Academy of Pediatrics (IAP) — ECD Guidelines
+3. WHO Child Growth Standards (0-5 years)
+
+**Document:** Grow Baby Grow PRD v1.0 | April 2026
+All milestone data sourced from AIIMS New Delhi Child Neurology Division.

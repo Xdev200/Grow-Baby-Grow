@@ -1,0 +1,330 @@
+.dashboardContainer {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.profileBrief {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  background-color: var(--primary-light);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.babyName {
+  font-size: 20px;
+  margin: 0;
+}
+
+.babyAge {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.reportButton {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: var(--slate-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  min-height: 48px;
+}
+
+.reportButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.welcomeCard {
+  background: linear-gradient(135deg, var(--white) 0%, var(--slate-50) 100%);
+  padding: 32px 24px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.welcomeIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.welcomeCard h2 {
+  margin-bottom: 8px;
+}
+
+.welcomeCard p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.statsRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.statBox {
+  flex: 1;
+  background-color: var(--white);
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.statVal {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sectionHeader {
+  margin-bottom: 16px;
+}
+
+.sectionHeader h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.card:active {
+  transform: scale(0.97);
+}
+
+.domainName {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--slate-800);
+  text-align: center;
+}
+
+.statusText {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.fab {
+  position: fixed;
+  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background-color: var(--slate-900);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+  border: none;
+  cursor: pointer;
+  /* Constrain for desktop centered layout */
+  max-width: 480px;
+}
+
+.helperText {
+  font-size: 11px;
+  color: var(--primary);
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end; /* Bottom sheet style for mobile */
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@media (min-width: 600px) {
+  .modalOverlay {
+    align-items: center;
+  }
+}
+
+.modalContent {
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  max-height: 80dvh;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 24px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+@media (min-width: 600px) {
+  .modalContent {
+    border-radius: 24px;
+    max-height: 70vh;
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modalHeader h2 {
+  font-size: 20px;
+  margin: 0;
+  color: var(--slate-900);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--slate-400);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.milestoneList {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+.detailCard {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: var(--slate-50);
+}
+
+.status_achieved {
+  border-color: #d1fae5;
+  background-color: #f0fdf4;
+}
+
+.status_not_yet {
+  border-color: #fee2e2;
+  background-color: #fef2f2;
+}
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.ageBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--slate-400);
+  padding: 2px 8px;
+  background: white;
+  border-radius: 4px;
+}
+
+.milestoneText {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--slate-700);
+  margin: 0;
+}
+
+.redFlagMini {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--coral);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.emptyText {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 40px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

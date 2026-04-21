@@ -1,0 +1,254 @@
+.chartWrapper {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chartTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+  margin-top: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.growthScreen {
+  padding: 24px 16px;
+  padding-bottom: 100px;
+}
+
+.inputGroup {
+  margin-top: 32px;
+}
+
+.inputCard {
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.value {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 4px 0 0 0 ;
+}
+
+.tabToggle {
+  display: flex;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.tabButton {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  color: #64748b;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 44px;
+}
+
+.tabActive {
+  background: white;
+  color: var(--primary);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sectionHeader .sectionTitle {
+  margin-bottom: 0;
+}
+
+.editButton {
+  padding: 6px 16px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.editInput {
+  width: 75px;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: right;
+  font-family: inherit;
+  font-weight: 700;
+  min-height: 44px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.row .inputCard {
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 16px;
+}
+
+.referenceSection {
+  margin-top: 32px;
+}
+
+.referenceCard {
+  background: white;
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.referenceCard:active {
+  opacity: 0.8;
+}
+
+.referenceImg {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+.referenceCaption {
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+/* Dynamic Chart Enhancements */
+.chartHeader {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.chartBadge {
+  color: white;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+}
+
+.chartSubTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.insightSection {
+  margin-top: 24px;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+}
+
+.laymanExplanation {
+  font-size: 12px;
+  color: #64748b;
+  margin: 8px 0 0 0;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.refInfo {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.infoIcon {
+  width: 16px;
+  height: 16px;
+  background: #e2e8f0;
+  color: #64748b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.chartFooter {
+  font-size: 12px;
+  font-weight: 800;
+  color: #64748b;
+  text-align: center;
+  margin-top: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}

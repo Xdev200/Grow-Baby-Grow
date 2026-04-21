@@ -1,0 +1,48 @@
+.bannerContainer {
+  background: #fff1f2;
+  border: 1px solid var(--coral);
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(225, 29, 72, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); }
+}
+
+.icon {
+  font-size: 24px;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #e11d48;
+  margin-bottom: 4px;
+}
+
+.message {
+  font-size: 13px;
+  color: #881337;
+  line-height: 1.4;
+}
+
+.actionButton {
+  background: #e11d48;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 12px;
+}

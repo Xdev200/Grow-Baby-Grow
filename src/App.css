@@ -1,0 +1,13 @@
+/* Main application styles */
+#root {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  display: flex;
+  flex-direction: column;
+}
+
+.app-layout {
+  /* Space for fixed bottom nav + safe area */
+  padding-bottom: var(--nav-total-height, 80px);
+  flex: 1;
+}
