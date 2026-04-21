@@ -57,10 +57,9 @@ In India, early developmental delays are often missed simply because monitoring 
    ```bash
    npm run dev
    ```
-3. **Build Native APK**
+3. **Build Native APK/AAB**
    ```bash
-   npx cap sync android
-   cd android && ./gradlew assembleRelease
+   npm run build:android
    ```
 
 ## 🗺️ Roadmap
