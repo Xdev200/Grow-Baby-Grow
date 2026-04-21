@@ -1,56 +1,80 @@
-# Grow Baby Grow PWA
+<div align="center">
 
-An offline-first, clinically-aware developmental milestone tracker designed specifically for Indian parents, adhering to **AIIMS New Delhi** and **IAP (Indian Academy of Pediatrics)** guidelines.
+<img src="./public/GBG_NoText-no_bg.png" width="160" height="160" alt="Grow Baby Grow Logo">
 
-![App Icon](./public/GBG_NoText.png)
+# 🌿 Grow Baby Grow
+### Precision Pediatric Tracking for the Modern Indian Parent
 
-## 🌟 Features
-
-- **Clinical Integrity**: Milestone assessments based on AIIMS New Delhi clinical data (0-5 years).
-- **Offline-First (PWA)**: Works without internet. Data is persisted locally using IndexedDB for maximum privacy.
-- **Prematurity Adjustments**: Clinical calculations for corrected age until 24 months.
-- **Visual Growth Tracking**: WHO Weight-for-age charts with percentiles (P3, P50, P97).
-- **Clinical Red Flags**: Professional alert system for critical developmental markers.
-- **Professional Reporting**: On-device PDF generation for pediatric consultations.
-- **Data Sovereignty**: Local backup export (JSON) and import.
-
-## 🛠️ Tech Stack
-
-- **Core**: React 18 + TypeScript + Vite 6
-- **Storage**: IndexedDB (`idb`)
-- **Reporting**: `jsPDF` + `jsPDF-AutoTable`
-- **Visualization**: Custom SVG D3-inspired charting
-- **Styling**: Vanilla CSS Modules (Emerald/Amber/Coral palette)
-
-## 🚀 Getting Started
-
-### 1. Installation
-```bash
-npm install
-```
-
-### 2. Development
-```bash
-npm run dev
-```
-
-### 3. Production Build
-```bash
-npm run build
-```
-
-## 📋 Roadmap (WBS Status)
-
-All 6 Phases completed:
-1. **Foundation**: AIIMS Data & IndexedDB Storage.
-2. **UI/UX**: Dashboard & Domain Progress Rings.
-3. **Clinical Logic**: Age corrections & Assessment engine.
-4. **Visualization**: SVG Timelines & WHO Growth Charts.
-5. **Safety**: Red Flag alarms & PDF Clinical Reports.
-6. **Polish**: PWA optimization & Performance.
-
-## ⚖️ Clinical Disclaimer
-Grow Baby Grow is a digital screening tool designed to assist parents in monitoring child development. It is **not** a substitute for regular pediatric visits or professional developmental assessments by a qualified healthcare provider.
+[![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
+[![Platform: Android](https://img.shields.io/badge/Platform-Android-3DDC84.svg?logo=android&logoColor=white)](android/app/build/outputs/apk/release/app-release.apk)
+[![App Status: PWA](https://img.shields.io/badge/Web-PWA-indigo.svg?logo=progressive-web-apps&logoColor=white)](https://growbabygrow.in)
+[![Standards: AIIMS/IAP](https://img.shields.io/badge/Standards-AIIMS%20%7C%20IAP-blue.svg)](https://www.aiims.edu)
 
 ---
-Built with ❤️ for Indian Parents.
+
+**Every milestone is a masterpiece.** Grow Baby Grow is an offline-first, clinically-accurate developmental ecosystem that gives parents the tools of a pediatrician at their fingertips.
+
+[**Download Signed APK**](android/app/build/outputs/apk/release/app-release.apk) • [**Explore the PWA**](https://growbabygrow.in) • [**View Roadmap**](#-roadmap)
+
+</div>
+
+## 💡 The "Why"
+In India, early developmental delays are often missed simply because monitoring is complex. We've simplified it. By encoding the **AIIMS New Delhi** and **IAP** guidelines into a high-performance, private-by-default application, we empower parents to track, understand, and act on their child's growth with professional confidence.
+
+## ✨ Core Pillars
+
+### 📈 Clinical Intelligence
+- **AIIMS Verified**: assessments mapped across 5 developmental domains (Gross Motor, Fine Motor, Social, Language, Cognitive).
+- **Corrected Age Logic**: Automatic clinical adjustments for premature infants until 24 months.
+
+### 🌐 Privacy & Performance
+- **Local-First Architecture**: Your child's data never leaves your device. Powered by Distributed IndexedDB.
+- **Zero Internet Needed**: Fully functional offline PWA with instant native Android performance via Capacitor.
+
+### 🏥 Safety & Reporting
+- **Red Flag Engine**: Instant clinical alerts for critical developmental lags that require medical attention.
+- **Consult-Ready PDFs**: Generate professional reports with one tap to share with your pediatrician.
+
+## 🛠️ The Tech Ecosystem
+
+| Layer | Technology | Why? |
+| :--- | :--- | :--- |
+| **Frontend** | React 18 + TS | Type-safe, declarative UI at scale. |
+| **Build System** | Vite 6 | Lightning fast HMR and optimized asset delivery. |
+| **Native Bridge**| Capacitor 6 | Native Android performance with a zero-maintenance bridge. |
+| **Storage** | IndexedDB | High-capacity on-device persistence (Privacy First). |
+| **Logic** | AIIMS/IAP Rules | Adherence to the gold standard of Indian pediatrics. |
+
+## 🚀 Experience It Locally
+
+1. **Clone & Install**
+   ```bash
+   git clone https://github.com/your-repo/grow-baby-grow.git
+   cd grow-baby-grow
+   npm install
+   ```
+2. **Start Dev Server**
+   ```bash
+   npm run dev
+   ```
+3. **Build Native APK**
+   ```bash
+   npx cap sync android
+   cd android && ./gradlew assembleRelease
+   ```
+
+## 🗺️ Roadmap
+- [x] **Phase 1-6**: Core PWA & Clinical Data Engine.
+- [x] **Phase 7-8**: Advanced Growth Charting (WHO/IAP 2015).
+- [x] **Phase 9**: Native Android (Signed APK/AAB).
+- [ ] **Phase 10**: Vaccination Tracker (IAP 2024-25 Recommendations).
+- [ ] **Phase 11**: AI-Powered Developmental Insights.
+
+## ⚖️ Clinical Disclaimer
+Grow Baby Grow is a digital screening companion. It does **not** provide medical diagnoses. Always consult with a certified pediatrician for definitive assessments.
+
+---
+
+<p align="center">
+  Built with ❤️ for Indian Parents by the Grow Baby Grow Open Source Team.
+</p>
