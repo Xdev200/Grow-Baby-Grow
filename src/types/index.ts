@@ -68,5 +68,31 @@ export type QuizSession = {
   isComplete: boolean;
 };
 
+export type VaccineMaster = {
+  id: string;
+  name: string;
+  ageWeeks?: number;
+  ageMonths?: number;
+  ageLabel: string;
+  description: string;
+  dose: string;
+  route: string;
+  site: string;
+  isOptional: boolean;
+};
+
+export type VaccineStatus = 'upcoming' | 'completed' | 'overdue' | 'skipped';
+
+export type VaccineLog = {
+  id: string;
+  childId: string;
+  vaccineId: string;
+  status: VaccineStatus;
+  dueDate: string;
+  administeredDate?: string;
+  notes?: string;
+  loggedAt: string;
+};
+
 // Value export to ensure module has runtime presence if needed
 export const APP_SCHEMA_VERSION = '1.0.0';

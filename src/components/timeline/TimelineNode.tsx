@@ -47,7 +47,9 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
       <div className={`${styles.milestoneCard} ${(milestone.isRedFlag && milestone.ageMonths <= (assessmentAgeMonths || 0) && !isAchieved) ? styles.redFlag : ''}`}>
         {(milestone.isRedFlag && milestone.ageMonths <= (assessmentAgeMonths || 0) && !isAchieved) && <span className={styles.redFlagTag}>RED FLAG</span>}
         
-        <p className={styles.milestoneTitle}>{milestone.milestone}</p>
+        <p className={styles.milestoneTitle}>
+          {milestone.milestone.trim().charAt(0).toUpperCase() + milestone.milestone.trim().slice(1)}
+        </p>
         
         {(milestone.laymanDescription || milestone.howToTest) && (
           <div className={styles.detailsContainer}>
