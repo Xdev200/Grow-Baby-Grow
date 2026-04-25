@@ -80,3 +80,4 @@
 - [x] Task 10.7: Marketing Website (Landing, Privacy, Terms) @done(2026-04-21)
 - [ ] Task 10.4: App Store (iOS) integration
 - [ ] Task 10.5: Store metadata and screenshots preparation
+- [x] Task 10.8: Aligned App Icon with Launcher Icon & Bumped version to 1.0.2 (vCode 3) @done(2026-04-24)
