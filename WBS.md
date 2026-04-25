@@ -66,11 +66,15 @@
 - [x] Mobile optimization: safe areas, viewport-fit, touch targets, form clipping fix @done(2026-04-20)
 
 ## Phase 9: Health & Medical (Week 9)
-- [/] Task 9.1: Vaccination Tracker based on IAP 2024-25 recommendations
-- [ ] Task 9.2: Toggle for WHO recommendations integration
-- [ ] Task 9.3: Vaccine Information modal & detail cards
-- [ ] Task 9.4: Vaccination completion tracking & persistence
-- [ ] Task 9.5: Vaccine reminder system UI & state
+- [x] Task 9.1: Vaccination Tracker based on National Immunization Schedule @done(2026-04-25)
+- [x] Task 9.2: Added Varicella (Chicken Pox) optional vaccines (15th and 18th month) @done(2026-04-25)
+- [x] Task 9.3: Vaccine Information cards with dose, route, and site info @done(2026-04-25)
+- [x] Task 9.4: Vaccination completion tracking & persistence in IndexedDB @done(2026-04-25)
+- [x] Task 9.5: Vaccine reminder/scheduling system via Parent-confirmed date picker @done(2026-04-25)
+- [x] Task 9.6: Refined Missed Vaccine UI (Red status, high contrast buttons) @done(2026-04-25)
+- [x] Task 9.7: Standardized Milestone and Vaccine text to sentence case @done(2026-04-25)
+- [x] Task 9.8: Improved generic reminder toggle contrast @done(2026-04-25)
+- [x] Task 9.9: Local notification scheduling with custom offset and time @done(2026-04-25)
 
 ## Phase 10: Native App & Play Store (Week 10)
 - [x] Task 10.1: Capacitor integration for Native Android @done(2026-04-21)

@@ -1,5 +1,5 @@
 import { openDB, type IDBPDatabase } from 'idb';
-import type { Child, MilestoneLog, GrowthMeasurement, QuizSession } from '../types';
+import type { Child, MilestoneLog, GrowthMeasurement, QuizSession, VaccineLog } from '../types';
 
 const DB_NAME = 'GrowBabyGrowDB';
 const DB_VERSION = 1;
@@ -29,6 +29,11 @@ export class StorageService {
           const store = db.createObjectStore('quiz_sessions', { keyPath: 'id' });
           store.createIndex('by-child', 'childId');
         }
+        // Vaccination logs
+        if (!db.objectStoreNames.contains('vaccine_logs')) {
+          const store = db.createObjectStore('vaccine_logs', { keyPath: 'id' });
+          store.createIndex('by-child', 'childId');
+        }
       },
     });
   }
@@ -56,7 +61,7 @@ export class StorageService {
 
   async deleteChild(id: string): Promise<void> {
     const db = await this.dbPromise;
-    const tx = db.transaction(['children', 'milestone_logs', 'growth_measurements', 'quiz_sessions'], 'readwrite');
+    const tx = db.transaction(['children', 'milestone_logs', 'growth_measurements', 'quiz_sessions', 'vaccine_logs'], 'readwrite');
     
     // Delete child
     await tx.objectStore('children').delete(id);
@@ -75,6 +80,7 @@ export class StorageService {
     await cleanupStore('milestone_logs');
     await cleanupStore('growth_measurements');
     await cleanupStore('quiz_sessions');
+    await cleanupStore('vaccine_logs');
     
     await tx.done;
   }
@@ -117,6 +123,17 @@ export class StorageService {
     return sessions.sort((a, b) => 
       new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
     )[0];
+  }
+
+  // Vaccination Log Operations
+  async saveVaccineLog(log: VaccineLog): Promise<void> {
+    const db = await this.dbPromise;
+    await db.put('vaccine_logs', log);
+  }
+
+  async getVaccineLogs(childId: string): Promise<VaccineLog[]> {
+    const db = await this.dbPromise;
+    return db.getAllFromIndex('vaccine_logs', 'by-child', childId);
   }
 }
 

@@ -9,6 +9,7 @@ import { GrowthScreen } from './screens/GrowthScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { PrivacyScreen } from './screens/PrivacyScreen';
 import { TermsScreen } from './screens/TermsScreen';
+import { VaccinationScreen } from './screens/VaccinationScreen';
 import { BottomNav } from './components/navigation/BottomNav';
 import './App.css';
 
@@ -34,6 +35,7 @@ const AppRoutes = () => {
         <Route path="/quiz" element={<QuizScreen />} />
         <Route path="/timeline" element={<TimelineScreen />} />
         <Route path="/growth" element={<GrowthScreen />} />
+        <Route path="/vaccination" element={<VaccinationScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/privacy" element={<PrivacyScreen />} />
         <Route path="/terms" element={<TermsScreen />} />

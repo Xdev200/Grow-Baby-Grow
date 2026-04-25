@@ -30,6 +30,14 @@ export const BottomNav: React.FC = () => {
       </NavLink>
 
       <NavLink 
+        to="/vaccination" 
+        className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
+      >
+        <span className={styles.icon}>💉</span>
+        <span className={styles.label}>Vaccines</span>
+      </NavLink>
+
+      <NavLink 
         to="/profile" 
         className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
       >
