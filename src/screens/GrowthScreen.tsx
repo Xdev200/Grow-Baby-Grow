@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
 import { GrowthChart } from '../components/growth/GrowthChart';
 import { calculateAge } from '../utils/age';
@@ -6,6 +7,7 @@ import styles from '../components/growth/Growth.module.css';
 
 export const GrowthScreen: React.FC = () => {
   const { activeChild, updateGrowth } = useChild();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'weight' | 'height'>('weight');
   const [isEditing, setIsEditing] = useState(false);
   
@@ -31,7 +33,6 @@ export const GrowthScreen: React.FC = () => {
     { month, value: activeChild.currentHeightCm || (activeChild.birthHeightCm || 49.9) }
   ];
 
-
   const handleSave = async () => {
     await updateGrowth(
       editWeight ? parseFloat(editWeight) : undefined,
@@ -44,21 +45,21 @@ export const GrowthScreen: React.FC = () => {
     <div className={styles.growthScreen}>
       <header className={styles.header}>
         <div>
-          <h1 className={styles.title}>Growth Tracking</h1>
-          <p className={styles.subtitle}>WHO Z-Score Reference ({ageData.displayAge})</p>
+          <h1 className={styles.title}>{t('growth.title')}</h1>
+          <p className={styles.subtitle}>{t('growth.subtitle', { age: ageData.displayAge })}</p>
         </div>
         <div className={styles.tabToggle}>
           <button 
             className={`${styles.tabButton} ${activeTab === 'weight' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('weight')}
           >
-            Weight
+            {t('growth.weight')}
           </button>
           <button 
             className={`${styles.tabButton} ${activeTab === 'height' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('height')}
           >
-            Height
+            {t('growth.height')}
           </button>
         </div>
       </header>
@@ -72,18 +73,18 @@ export const GrowthScreen: React.FC = () => {
 
       <div className={styles.inputGroup}>
         <div className={styles.sectionHeader}>
-          <h3 className={styles.sectionTitle}>Latest Measurements</h3>
+          <h3 className={styles.sectionTitle}>{t('growth.latest_measurements')}</h3>
           <button 
             className={styles.editButton}
             onClick={() => isEditing ? handleSave() : setIsEditing(true)}
           >
-            {isEditing ? 'Save' : 'Edit'}
+            {isEditing ? t('common.save') : t('common.edit')}
           </button>
         </div>
         
         <div className={styles.row}>
           <div className={styles.inputCard}>
-            <span className={styles.label}>Weight (kg)</span>
+            <span className={styles.label}>{t('growth.weight_kg')}</span>
             {isEditing ? (
               <input 
                 type="number" 
@@ -98,7 +99,7 @@ export const GrowthScreen: React.FC = () => {
           </div>
           
           <div className={styles.inputCard}>
-            <span className={styles.label}>Length (cm)</span>
+            <span className={styles.label}>{t('growth.length_cm')}</span>
             {isEditing ? (
               <input 
                 type="number" 

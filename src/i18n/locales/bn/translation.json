@@ -1,0 +1,71 @@
+{
+  "common": {
+    "home": "হোম",
+    "track": "ট্র্যাক",
+    "growth": "বৃদ্ধি",
+    "vaccines": "টিকা",
+    "profile": "প্রোফাইল",
+    "language": "ভাষা",
+    "version": "সংস্করণ",
+    "save": "সংরক্ষণ",
+    "edit": "সম্পাদনা",
+    "loading": "লোড হচ্ছে...",
+    "done": "সম্পন্ন"
+  },
+  "dashboard": {
+    "ready_to_track": "ট্র্যাক করতে প্রস্তুত?",
+    "welcome_text": "আপনি এখনও কোনো মূল্যায়ন সম্পন্ন করেননি। আসুন আপনার শিশুর প্রথম ক্লিনিকাল মাইলফলক পরীক্ষা দিয়ে শুরু করি।",
+    "start_first_assessment": "প্রথম মূল্যায়ন শুরু করুন",
+    "milestones_achieved": "অর্জিত মাইলফলক",
+    "red_flags": "লাল পতাকা (সতর্কতা)",
+    "developmental_domains": "উন্নয়নমূলক ক্ষেত্র",
+    "tap_card_details": "বিস্তারিত জানতে কার্ডে ট্যাপ করুন",
+    "new_assessment": "নতুন মূল্যায়ন",
+    "download_pdf": "পিডিএফ ডাউনলোড করুন"
+  },
+  "growth": {
+    "title": "বৃদ্ধি ট্র্যাকিং",
+    "subtitle": "WHO জেড-স্কোর রেফারেন্স ({{age}})",
+    "weight": "ওজন",
+    "height": "উচ্চতা",
+    "latest_measurements": "সর্বশেষ পরিমাপ",
+    "weight_kg": "ওজন (কেজি)",
+    "length_cm": "দৈর্ঘ্য (সেমি)"
+  },
+  "timeline": {
+    "title": "উন্নয়ন পথ",
+    "subtitle": "{{age}} মাসের জন্য প্রত্যাশিত মাইলফলক",
+    "birth": "জন্ম",
+    "month": "মাস",
+    "months": "মাস",
+    "no_milestones": "কোনো মাইলফলক পাওয়া যায়নি।"
+  },
+  "vaccines": {
+    "title": "টিকা",
+    "subtitle": "{{name}}-এর জন্য জাতীয় টিকাদান তালিকা",
+    "reminders_label": "আগামী টিকার জন্য রিমাইন্ডার",
+    "loading_schedule": "তালিকা লোড হচ্ছে...",
+    "permission_required": "রিমাইন্ডারের জন্য বিজ্ঞপ্তির অনুমতি প্রয়োজন।",
+    "reminder_set": "{{name}}-এর জন্য রিমাইন্ডার সেট করা হয়েছে!"
+  },
+  "profile": {
+    "child_profile": "শিশুর প্রোফাইল",
+    "name": "নাম",
+    "dob": "জন্ম তারিখ",
+    "gender": "লিঙ্গ",
+    "data_management": "ডেটা ম্যানেজমেন্ট",
+    "backup_note": "গ্রো বেবি গ্রো অফলাইন-ফার্স্ট। যতক্ষণ আপনি ব্যাকআপ এক্সপোর্ট না করছেন, আপনার ডেটা এই ডিভাইসেই থাকে।",
+    "export_backup": "ব্যাকআপ এক্সপোর্ট করুন (JSON)",
+    "import_backup": "ব্যাকআপ ইম্পোর্ট করুন",
+    "clinical_standards": "ক্লিনিকাল স্ট্যান্ডার্ড",
+    "milestones": "মাইলফলক",
+    "growth_standards": "বৃদ্ধির স্ট্যান্ডার্ড"
+  },
+  "domains": {
+    "gross_motor": "স্থূল চালক দক্ষতা",
+    "fine_motor": "সূক্ষ্ম চালক দক্ষতা",
+    "language": "ভাষা",
+    "socio_adaptive": "সামাজিক",
+    "hearing_vision": "সংবেদনশীল"
+  }
+}

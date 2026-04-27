@@ -1,16 +1,17 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
 import { storageService } from '../services/storage';
+import { LanguageSwitcher } from '../components/navigation/LanguageSwitcher';
 import styles from './Profile.module.css';
 
 export const ProfileScreen: React.FC = () => {
   const { activeChild, setChild } = useChild();
+  const { t } = useTranslation();
 
   const handleExport = async () => {
     try {
       const children = await storageService.getChildren();
-      // We'll export child profile + logs for simplicity in this demo
-      // In production, we'd loop through all logs/growth measurements
       const data = {
         exportDate: new Date().toISOString(),
         children
@@ -36,7 +37,6 @@ export const ProfileScreen: React.FC = () => {
       try {
         const data = JSON.parse(event.target?.result as string);
         if (data.children && data.children.length > 0) {
-          // Simplistic import: save the first child
           await storageService.saveChild(data.children[0]);
           setChild(data.children[0]);
           alert('Data imported successfully!');
@@ -54,49 +54,54 @@ export const ProfileScreen: React.FC = () => {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.avatar}>👶</div>
-        <h1>Child Profile</h1>
+        <h1>{t('profile.child_profile')}</h1>
       </header>
 
       <section className={styles.infoCard}>
         <div className={styles.field}>
-          <label>Name</label>
+          <label>{t('profile.name')}</label>
           <p>{activeChild.name}</p>
         </div>
         <div className={styles.field}>
-          <label>Date of Birth</label>
+          <label>{t('profile.dob')}</label>
           <p>{new Date(activeChild.dob).toLocaleDateString()}</p>
         </div>
         <div className={styles.field}>
-          <label>Gender</label>
+          <label>{t('profile.gender')}</label>
           <p>{activeChild.gender}</p>
         </div>
       </section>
 
       <section className={styles.backupSection}>
-        <h2>Data Management</h2>
+        <h2>{t('common.language')}</h2>
+        <LanguageSwitcher />
+      </section>
+
+      <section className={styles.backupSection}>
+        <h2>{t('profile.data_management')}</h2>
         <p className={styles.backupNote}>
-          Grow Baby Grow is offline-first. Your data never leaves this device unless you export a backup.
+          {t('profile.backup_note')}
         </p>
         
         <div className={styles.buttonGroup}>
           <button onClick={handleExport} className={styles.btnSecondary}>
-            📤 Export Backup (JSON)
+            📤 {t('profile.export_backup')}
           </button>
           
           <label className={styles.btnSecondary}>
-            📥 Import Backup
+            📥 {t('profile.import_backup')}
             <input type="file" accept=".json" onChange={handleImport} hidden />
           </label>
         </div>
       </section>
 
       <section className={styles.credits}>
-        <h3>Clinical Standards</h3>
+        <h3>{t('profile.clinical_standards')}</h3>
         <ul>
-          <li><strong>Milestones:</strong> AIIMS New Delhi / IAP standards.</li>
-          <li><strong>Growth:</strong> WHO Child Growth Standards (2006).</li>
+          <li><strong>{t('profile.milestones')}:</strong> AIIMS New Delhi / IAP standards.</li>
+          <li><strong>{t('profile.growth_standards')}:</strong> WHO Child Growth Standards (2006).</li>
         </ul>
-        <p className={styles.version}>Version 1.0.0 (Beta)</p>
+        <p className={styles.version}>{t('common.version')} 1.0.0 (Beta)</p>
       </section>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
 import { calculateAge } from '../utils/age';
 import { storageService } from '../services/storage';
@@ -15,6 +16,7 @@ export interface DomainProgress {
 
 export const useAssessment = () => {
   const { activeChild } = useChild();
+  const { t } = useTranslation();
   const [logs, setLogs] = useState<MilestoneLog[]>([]);
 
   const ageData = useMemo(() => {
@@ -32,11 +34,11 @@ export const useAssessment = () => {
     if (!ageData) return [];
 
     const domains: { domain: Domain; name: string; color: string }[] = [
-      { domain: 'gross_motor', name: 'Gross Motor', color: '#1D9E75' },
-      { domain: 'fine_motor', name: 'Fine Motor', color: '#BA7517' },
-      { domain: 'language', name: 'Language', color: '#3b82f6' },
-      { domain: 'socio_adaptive', name: 'Social', color: '#D85A30' },
-      { domain: 'hearing_vision', name: 'Sensory', color: '#8b5cf6' },
+      { domain: 'gross_motor' as Domain, name: t('domains.gross_motor'), color: '#1D9E75' },
+      { domain: 'fine_motor' as Domain, name: t('domains.fine_motor'), color: '#BA7517' },
+      { domain: 'language' as Domain, name: t('domains.language'), color: '#3b82f6' },
+      { domain: 'socio_adaptive' as Domain, name: t('domains.socio_adaptive'), color: '#D85A30' },
+      { domain: 'hearing_vision' as Domain, name: t('domains.hearing_vision'), color: '#8b5cf6' },
     ];
 
     // Filter milestones up to current age band
@@ -54,7 +56,7 @@ export const useAssessment = () => {
         achieved: achievedInDomain
       };
     });
-  }, [ageData, logs]);
+  }, [ageData, logs, t]);
 
   const triggeredRedFlags = useMemo(() => {
     if (!ageData) return [];
