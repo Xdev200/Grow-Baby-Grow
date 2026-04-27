@@ -14,7 +14,7 @@
 
 **Every milestone is a masterpiece.** Grow Baby Grow is an offline-first, clinically-accurate developmental ecosystem that gives parents the tools of a pediatrician at their fingertips.
 
-[**Download Signed APK**](android/app/build/outputs/apk/release/app-release.apk) • [**Explore the PWA**](https://growbabygrow.in) • [**View Roadmap**](#-roadmap)
+
 
 </div>
 
@@ -24,8 +24,12 @@ In India, early developmental delays are often missed simply because monitoring 
 ## ✨ Core Pillars
 
 ### 📈 Clinical Intelligence
-- **AIIMS Verified**: assessments mapped across 5 developmental domains (Gross Motor, Fine Motor, Social, Language, Cognitive).
+- **AIIMS Verified**: Developmental assessments mapped across 6 key domains: **Gross Motor, Fine Motor, Social & Adaptive, Language, Vision, and Hearing**.
 - **Corrected Age Logic**: Automatic clinical adjustments for premature infants until 24 months.
+
+### 💉 Immunization Tracking
+- **NIS Compliant**: Comprehensive tracker based on the **National Immunization Schedule (NIS)** for India.
+- **IAP Recommendations**: Integration of latest Indian Academy of Pediatrics (IAP) vaccine guidelines, including optional boosters.
 
 ### 🌐 Privacy & Performance
 - **Local-First Architecture**: Your child's data never leaves your device. Powered by Distributed IndexedDB.
@@ -65,9 +69,14 @@ In India, early developmental delays are often missed simply because monitoring 
 ## 🗺️ Roadmap
 - [x] **Phase 1-6**: Core PWA & Clinical Data Engine.
 - [x] **Phase 7-8**: Advanced Growth Charting (WHO/IAP 2015).
-- [x] **Phase 9**: Native Android (Signed APK/AAB).
-- [ ] **Phase 10**: Vaccination Tracker (IAP 2024-25 Recommendations).
+- [x] **Phase 9**: Vaccination Tracker (NIS & IAP Recommendations).
+- [x] **Phase 10**: Native Android (Play Store Production Build).
 - [ ] **Phase 11**: AI-Powered Developmental Insights.
+
+## 🩺 Medical Review & UX Design
+Special thanks to **Dr. Shubham Kashyap** for the comprehensive medical review, clinical data encoding, and user experience design.
+- **GitHub**: [DrOpenSource](https://github.com/DrOpenSource)
+- **LinkedIn**: [imkashyaps](https://www.linkedin.com/in/imkashyaps/)
 
 ## ⚖️ Clinical Disclaimer
 Grow Baby Grow is a digital screening companion. It does **not** provide medical diagnoses. Always consult with a certified pediatrician for definitive assessments.
