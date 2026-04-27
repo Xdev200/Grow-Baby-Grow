@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTimeline } from '../hooks/useTimeline';
 import { TimelineNode } from '../components/timeline/TimelineNode';
 import { MilestoneLogPicker } from '../components/timeline/MilestoneLogPicker';
@@ -7,6 +8,7 @@ import styles from '../components/timeline/Timeline.module.css';
 
 export const TimelineScreen: React.FC = () => {
   const { timelineData, childAgeMonths, assessmentAgeMonths, milestoneLogs } = useTimeline();
+  const { t } = useTranslation();
   const [showPicker, setShowPicker] = React.useState(false);
   
   const currentAgeRef = React.useRef<HTMLDivElement>(null);
@@ -35,9 +37,9 @@ export const TimelineScreen: React.FC = () => {
   return (
     <div className={styles.timelineContainer}>
       <header className={styles.timelineHeader}>
-        <h1 className={styles.timelineTitle}>Development Track</h1>
+        <h1 className={styles.timelineTitle}>{t('timeline.title')}</h1>
         <p className={styles.timelineSubtitle}>
-          Expected milestones for {childAgeMonths} months
+          {t('timeline.subtitle', { age: childAgeMonths })}
         </p>
       </header>
 
@@ -46,7 +48,7 @@ export const TimelineScreen: React.FC = () => {
           ages.map((age) => (
             <div key={age} className={styles.ageGroup} ref={age === assessmentAgeMonths ? currentAgeRef : undefined}>
               <div className={styles.ageDivider}>
-                <span>{age === 0 ? 'Birth' : `${age} Month${age !== 1 ? 's' : ''}`}</span>
+                <span>{age === 0 ? t('timeline.birth') : `${age} ${t('timeline.months')}`}</span>
               </div>
               
               {Object.entries(groupedData[age]).map(([domain, milestones]) => (
@@ -72,7 +74,7 @@ export const TimelineScreen: React.FC = () => {
           ))
         ) : (
           <div className={styles.emptyState}>
-            <p>No clinical milestones found.</p>
+            <p>{t('timeline.no_milestones')}</p>
           </div>
         )}
       </div>

@@ -1,0 +1,71 @@
+{
+  "common": {
+    "home": "Home",
+    "track": "Track",
+    "growth": "Growth",
+    "vaccines": "Vaccines",
+    "profile": "Profile",
+    "language": "Language",
+    "version": "Version",
+    "save": "Save",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "done": "done"
+  },
+  "dashboard": {
+    "ready_to_track": "Ready to track?",
+    "welcome_text": "You haven't completed any assessments yet. Let's start with your baby's first clinical milestone check.",
+    "start_first_assessment": "Start First Assessment",
+    "milestones_achieved": "Milestones Achieved",
+    "red_flags": "Red Flags",
+    "developmental_domains": "Developmental Domains",
+    "tap_card_details": "Tap a card for details",
+    "new_assessment": "New Assessment",
+    "download_pdf": "Download PDF"
+  },
+  "growth": {
+    "title": "Growth Tracking",
+    "subtitle": "WHO Z-Score Reference ({{age}})",
+    "weight": "Weight",
+    "height": "Height",
+    "latest_measurements": "Latest Measurements",
+    "weight_kg": "Weight (kg)",
+    "length_cm": "Length (cm)"
+  },
+  "timeline": {
+    "title": "Development Track",
+    "subtitle": "Expected milestones for {{age}} months",
+    "birth": "Birth",
+    "month": "Month",
+    "months": "Months",
+    "no_milestones": "No clinical milestones found."
+  },
+  "vaccines": {
+    "title": "Vaccinations",
+    "subtitle": "National Immunization Schedule for {{name}}",
+    "reminders_label": "Reminders for upcoming vaccines",
+    "loading_schedule": "Loading schedule...",
+    "permission_required": "Notification permissions are required for reminders.",
+    "reminder_set": "Reminder set for {{name}}!"
+  },
+  "profile": {
+    "child_profile": "Child Profile",
+    "name": "Name",
+    "dob": "Date of Birth",
+    "gender": "Gender",
+    "data_management": "Data Management",
+    "backup_note": "Grow Baby Grow is offline-first. Your data never leaves this device unless you export a backup.",
+    "export_backup": "Export Backup (JSON)",
+    "import_backup": "Import Backup",
+    "clinical_standards": "Clinical Standards",
+    "milestones": "Milestones",
+    "growth_standards": "Growth Standards"
+  },
+  "domains": {
+    "gross_motor": "Gross Motor",
+    "fine_motor": "Fine Motor",
+    "language": "Language",
+    "socio_adaptive": "Social",
+    "hearing_vision": "Sensory"
+  }
+}

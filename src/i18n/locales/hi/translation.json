@@ -1,0 +1,71 @@
+{
+  "common": {
+    "home": "होम",
+    "track": "ट्रैक",
+    "growth": "विकास",
+    "vaccines": "टीके",
+    "profile": "प्रोफाइल",
+    "language": "भाषा",
+    "version": "संस्करण",
+    "save": "सहेजें",
+    "edit": "बदलाव करें",
+    "loading": "लोड हो रहा है...",
+    "done": "पूरा हुआ"
+  },
+  "dashboard": {
+    "ready_to_track": "ट्रैक करने के लिए तैयार हैं?",
+    "welcome_text": "आपने अभी तक कोई मूल्यांकन पूरा नहीं किया है। आइए आपके बच्चे के पहले नैदानिक मील के पत्थर की जांच से शुरू करें।",
+    "start_first_assessment": "पहला मूल्यांकन शुरू करें",
+    "milestones_achieved": "उपलब्ध मील के पत्थर",
+    "red_flags": "चेतावनी संकेत",
+    "developmental_domains": "विकासात्मक क्षेत्र",
+    "tap_card_details": "विवरण के लिए कार्ड पर टैপ करें",
+    "new_assessment": "नया मूल्यांकन",
+    "download_pdf": "पीडीएफ डाउनलोड करें"
+  },
+  "growth": {
+    "title": "विकास की निगरानी",
+    "subtitle": "WHO जेड-स्कोर संदर्भ ({{age}})",
+    "weight": "वजन",
+    "height": "लंबाई",
+    "latest_measurements": "नवीनतम माप",
+    "weight_kg": "वजन (किलो)",
+    "length_cm": "लंबाई (सेमी)"
+  },
+  "timeline": {
+    "title": "विकास पथ",
+    "subtitle": "{{age}} महीने के लिए अपेक्षित मील के पत्थर",
+    "birth": "जन्म",
+    "month": "महीना",
+    "months": "महीने",
+    "no_milestones": "कोई मील के पत्थर नहीं मिले।"
+  },
+  "vaccines": {
+    "title": "टीकाकरण",
+    "subtitle": "{{name}} के लिए राष्ट्रीय टीकाकरण सूची",
+    "reminders_label": "आगामी टीकों के लिए रिमाइंडर",
+    "loading_schedule": "सूची लोड हो रही है...",
+    "permission_required": "रिमाइंडर के लिए नोटिफिकेशन की अनुमति आवश्यक है।",
+    "reminder_set": "{{name}} के लिए रिमाइंडर सेट किया गया!"
+  },
+  "profile": {
+    "child_profile": "बच्चे की प्रोफाइल",
+    "name": "नाम",
+    "dob": "जन्म तिथि",
+    "gender": "लिंग",
+    "data_management": "डेटा प्रबंधन",
+    "backup_note": "ग्रो बेबी ग्रो ऑफलाइन-फर्स्ट है। आपका डेटा तब तक इस डिवाइस से बाहर नहीं जाता जब तक आप बैकअप एक्सपोर्ट नहीं करते।",
+    "export_backup": "बैकअप एक्सपोर्ट करें (JSON)",
+    "import_backup": "बैकअप इम्पोर्ट करें",
+    "clinical_standards": "नैदानिक मानक",
+    "milestones": "मील के पत्थर",
+    "growth_standards": "विकास मानक"
+  },
+  "domains": {
+    "gross_motor": "सकल मोटर",
+    "fine_motor": "सूक्ष्म मोटर",
+    "language": "भाषा",
+    "socio_adaptive": "सामाजिक",
+    "hearing_vision": "संवेदनशील"
+  }
+}

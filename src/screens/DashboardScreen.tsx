@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
 import { useAssessment } from '../hooks/useAssessment';
 import { DomainCard } from '../components/dashboard/DomainCard';
@@ -15,6 +16,7 @@ export const DashboardScreen: React.FC = () => {
   const { activeChild } = useChild();
   const { ageData, domainProgress, triggeredRedFlags, refreshLogs } = useAssessment();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [logs, setLogs] = React.useState<any[]>([]);
   const [hasCheckedLogs, setHasCheckedLogs] = React.useState(false);
@@ -58,7 +60,7 @@ export const DashboardScreen: React.FC = () => {
           onClick={handleDownloadReport}
           className={styles.reportButton}
           disabled={logs.length === 0}
-          title="Download PDF"
+          title={t('dashboard.download_pdf')}
         >
           📄
         </button>
@@ -67,14 +69,14 @@ export const DashboardScreen: React.FC = () => {
       {hasCheckedLogs && logs.length === 0 ? (
         <div className={styles.welcomeCard + ' fade-in'}>
           <div className={styles.welcomeIcon}>🚀</div>
-          <h2>Ready to track?</h2>
-          <p>You haven't completed any assessments yet. Let's start with your baby's first clinical milestone check ({ageData.assessmentAgeMonths}m).</p>
+          <h2>{t('dashboard.ready_to_track')}</h2>
+          <p>{t('dashboard.welcome_text')} ({ageData.assessmentAgeMonths}m).</p>
           <button 
             className="btn-primary" 
             style={{ width: '100%', marginTop: '16px' }}
             onClick={() => navigate('/quiz')}
           >
-            Start First Assessment
+            {t('dashboard.start_first_assessment')}
           </button>
         </div>
       ) : (
@@ -87,19 +89,19 @@ export const DashboardScreen: React.FC = () => {
           <div className={styles.statsRow}>
             <div className={styles.statBox}>
               <span className={styles.statVal}>{totalAchieved}</span>
-              <span className={styles.statLabel}>Milestones Achieved</span>
+              <span className={styles.statLabel}>{t('dashboard.milestones_achieved')}</span>
             </div>
             <div className={styles.statBox}>
               <span className={styles.statVal} style={{ color: triggeredRedFlags.length > 0 ? 'var(--coral)' : 'var(--primary)' }}>
                 {triggeredRedFlags.length}
               </span>
-              <span className={styles.statLabel}>Red Flags</span>
+              <span className={styles.statLabel}>{t('dashboard.red_flags')}</span>
             </div>
           </div>
 
           <div className={styles.sectionHeader}>
-            <h3>Developmental Domains</h3>
-            <p className={styles.helperText}>Tap a card for details</p>
+            <h3>{t('dashboard.developmental_domains')}</h3>
+            <p className={styles.helperText}>{t('dashboard.tap_card_details')}</p>
           </div>
 
           <div className={styles.grid}>
@@ -128,7 +130,7 @@ export const DashboardScreen: React.FC = () => {
 
       <button 
         className={styles.fab} 
-        title="New Assessment"
+        title={t('dashboard.new_assessment')}
         onClick={() => navigate('/quiz')}
       >
         +
