@@ -86,9 +86,13 @@
 - [ ] Task 10.5: Store metadata and screenshots preparation
 - [x] Task 10.9: Update README with clinical domains, NIS references, and medical credits @done(2026-04-27)
 - [x] Task 10.8: Aligned App Icon with Launcher Icon & Bumped version to 1.0.2 (vCode 3) @done(2026-04-24)
+- [x] Task 10.10: Update Landing Page with Vaccination and Multilingual features @done(2026-04-28)
+- [x] Task 10.11: Add subtle 'Medically reviewed by experienced pediatricians' badge on landing screen @done(2026-04-28)
+- [x] Task 10.12: Refactor Landing Screen into a dynamic 3-4 slide Splash Screen Carousel @done(2026-04-28)
 
 ## Phase 11: Localization (Week 11)
 - [x] Task 11.1: Integrate `react-i18next` for multilingual support @done(2026-04-27)
 - [x] Task 11.2: Implement English, Hindi, and Bengali translations @done(2026-04-27)
 - [x] Task 11.3: Add Language Switcher to Profile Screen @done(2026-04-27)
 - [x] Task 11.4: Refactor all screens (Growth, Timeline, Vaccination) for full i18n @done(2026-04-27)
+- [x] Task 11.5: Implement clinical data (vaccines and milestones) localization for Hindi @done(2026-04-28)
