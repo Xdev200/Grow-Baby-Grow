@@ -92,7 +92,7 @@ export const LandingScreen: React.FC = () => {
               </p>
               <div className={styles.reviewBadge}>
                 
-                <span>Multilingual Support Available</span>
+                <span>Multilingual Support Coming Soon</span>
               </div>
             </div>
           </div>

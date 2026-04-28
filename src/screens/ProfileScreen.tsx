@@ -72,10 +72,10 @@ export const ProfileScreen: React.FC = () => {
         </div>
       </section>
 
-      <section className={styles.backupSection}>
+      {/* <section className={styles.backupSection}>
         <h2>{t('common.language')}</h2>
         <LanguageSwitcher />
-      </section>
+      </section> */}
 
       <section className={styles.backupSection}>
         <h2>{t('profile.data_management')}</h2>
