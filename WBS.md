@@ -89,6 +89,8 @@
 - [x] Task 10.10: Update Landing Page with Vaccination and Multilingual features @done(2026-04-28)
 - [x] Task 10.11: Add subtle 'Medically reviewed by experienced pediatricians' badge on landing screen @done(2026-04-28)
 - [x] Task 10.12: Refactor Landing Screen into a dynamic 3-4 slide Splash Screen Carousel @done(2026-04-28)
+- [x] Task 10.13: Generate Production build (v1.0.3) and Release Notes @done(2026-04-28)
+- [x] Task 10.14: Update Landing Page with Google Play Store CTA button @done(2026-04-29)
 
 ## Phase 11: Localization (Week 11)
 - [x] Task 11.1: Integrate `react-i18next` for multilingual support @done(2026-04-27)

@@ -123,11 +123,78 @@ nav a:hover {
     box-shadow: 0 6px 20px rgba(6, 95, 70, 0.4);
 }
 
+/* Play Store Button */
+.play-store-btn {
+    display: inline-flex;
+    align-items: center;
+    background: #000;
+    color: white;
+    padding: 0.75rem 1.75rem;
+    border-radius: 12px;
+    text-decoration: none;
+    gap: 0.8rem;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    border: 1px solid #333;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.play-store-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+    background: #111;
+    border-color: #444;
+}
+
+.play-store-btn svg {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.btn-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    text-align: left;
+}
+
+.btn-text span {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    opacity: 0.9;
+}
+
+.btn-text strong {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+/* Medical Badge */
+.medical-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #ecfdf5;
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(6, 95, 70, 0.1);
+}
+
+.medical-badge i {
+    color: var(--primary-light);
+}
+
 /* Features */
 .features {
     padding: 6rem 10%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
 }
 
@@ -164,7 +231,7 @@ footer {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: 4rem;
     margin-bottom: 4rem;
 }
