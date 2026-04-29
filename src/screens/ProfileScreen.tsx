@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
 import { storageService } from '../services/storage';
-import { LanguageSwitcher } from '../components/navigation/LanguageSwitcher';
+// import { LanguageSwitcher } from '../components/navigation/LanguageSwitcher';
 import styles from './Profile.module.css';
 
 export const ProfileScreen: React.FC = () => {
