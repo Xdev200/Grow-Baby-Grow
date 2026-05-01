@@ -2,7 +2,7 @@
 
 <img src="./public/GBG_NoText-no_bg.png" width="160" height="160" alt="Grow Baby Grow Logo">
 
-# 🌿 Grow Baby Grow
+# 🌿 Grow Baby Grow - [Playstore](https://play.google.com/store/apps/details?id=com.growbabygrow.app)
 ### Precision Pediatric Tracking for the Modern Indian Parent
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
@@ -77,6 +77,7 @@ In India, early developmental delays are often missed simply because monitoring 
 Special thanks to **Dr. Shubham Kashyap** for the comprehensive medical review, clinical data encoding, and user experience design.
 - **GitHub**: [DrOpenSource](https://github.com/DrOpenSource)
 - **LinkedIn**: [imkashyaps](https://www.linkedin.com/in/imkashyaps/)
+
 
 ## ⚖️ Clinical Disclaimer
 Grow Baby Grow is a digital screening companion. It does **not** provide medical diagnoses. Always consult with a certified pediatrician for definitive assessments.
