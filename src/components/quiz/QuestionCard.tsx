@@ -6,9 +6,15 @@ interface QuestionCardProps {
   milestone: MilestoneMaster;
   onAnswer: (status: MilestoneStatus) => void;
   childAgeMonths: number;
+  selectedAnswer?: MilestoneStatus;
 }
 
-export const QuestionCard: React.FC<QuestionCardProps> = ({ milestone, onAnswer, childAgeMonths }) => {
+export const QuestionCard: React.FC<QuestionCardProps> = ({ 
+  milestone, 
+  onAnswer, 
+  childAgeMonths,
+  selectedAnswer
+}) => {
   const isOverdue = childAgeMonths > milestone.ageMonths;
   const isUpcoming = childAgeMonths < milestone.ageMonths;
   const isMatchesAge = childAgeMonths === milestone.ageMonths;
@@ -30,6 +36,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ milestone, onAnswer,
           <details className={styles.testDetails}>
             <summary className={styles.testSummary}>
               <span>💡 How to test at home</span>
+              <svg className={styles.chevronIcon} viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
             </summary>
             <p className={styles.testInstructions}>{milestone.howToTest}</p>
           </details>
@@ -50,25 +59,25 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ milestone, onAnswer,
 
       <div className={styles.optionsGrid}>
         <button 
-          className={`${styles.optionButton} ${styles.optAchieved}`}
+          className={`${styles.optionButton} ${styles.optAchieved} ${selectedAnswer === 'achieved' ? styles.optionSelected : ''}`}
           onClick={() => onAnswer('achieved')}
         >
           ✅ Yes, definitely
         </button>
         <button 
-          className={`${styles.optionButton} ${styles.optPartial}`}
+          className={`${styles.optionButton} ${styles.optPartial} ${selectedAnswer === 'partial' ? styles.optionSelected : ''}`}
           onClick={() => onAnswer('partial')}
         >
           🟡 Sometimes / Partially
         </button>
         <button 
-          className={`${styles.optionButton} ${styles.optNotYet}`}
+          className={`${styles.optionButton} ${styles.optNotYet} ${selectedAnswer === 'not_yet' ? styles.optionSelected : ''}`}
           onClick={() => onAnswer('not_yet')}
         >
           ❌ Not yet
         </button>
         <button 
-          className={`${styles.optionButton} ${styles.optNotSure}`}
+          className={`${styles.optionButton} ${styles.optNotSure} ${selectedAnswer === 'deferred' ? styles.optionSelected : ''}`}
           onClick={() => onAnswer('deferred')}
         >
           ❔ Not sure

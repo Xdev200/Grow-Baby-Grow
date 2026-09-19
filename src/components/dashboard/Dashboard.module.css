@@ -2,7 +2,7 @@
   padding: 20px;
   flex: 1;
   overflow-y: auto;
-  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: 16px;
 }
 
 .header {
@@ -40,21 +40,38 @@
   margin: 0;
 }
 
-.reportButton {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background-color: var(--slate-100);
+.pdfDownloadBtn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  min-height: 48px;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-700);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  min-height: 44px;
 }
 
-.reportButton:disabled {
+.pdfDownloadBtn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.pdfDownloadBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.pdfBtnLabel {
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .welcomeCard {
@@ -127,38 +144,191 @@
   margin-bottom: 24px;
 }
 
-.card {
-  background: white;
-  padding: 16px;
-  border-radius: 16px;
+/* 3D Flip Card for Developmental Domains */
+.flipCardContainer {
+  perspective: 1000px;
+  min-height: 230px;
+  width: 100%;
+}
+
+.flipCardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 230px;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.isFlipped {
+  transform: rotateY(180deg);
+}
+
+.flipCardFront,
+.flipCardBack {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 18px;
+  padding: 14px;
   border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+}
+
+.flipCardFront {
+  background: white;
+}
+
+.frontContent {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: transform 0.2s;
+  gap: 4px;
+  margin: 6px 0;
 }
 
-.card:active {
-  transform: scale(0.97);
+.domainIcon {
+  font-size: 20px;
 }
 
 .domainName {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
-  color: var(--slate-800);
+  color: var(--slate-900);
   text-align: center;
 }
 
 .statusText {
   font-size: 12px;
   color: var(--text-muted);
+  font-weight: 600;
+}
+
+.flipHint {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+.flipCardBack {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  align-items: stretch;
+  text-align: left;
+}
+
+.backHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+.backTag {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: var(--slate-200);
+  color: var(--slate-700);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.domainDescription {
+  font-size: 12px;
+  color: var(--slate-600);
+  line-height: 1.45;
+  margin: 12px 0;
+  font-weight: 500;
+  flex: 1;
+}
+
+.domainAgeBadge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.backMilestoneSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: white;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.backMilestoneItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.backItemLabel {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--slate-400);
+  text-transform: uppercase;
+}
+
+.backItemVal {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--slate-800);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.backActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.viewDetailsBtn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.viewDetailsBtn:hover {
+  opacity: 0.9;
 }
 
 .fab {
   position: fixed;
-  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(var(--nav-total-height, 80px) + 16px);
   right: 20px;
   width: 56px;
   height: 56px;
@@ -328,3 +498,553 @@
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+/* Multi-child Hero Status Cards */
+/* Multi-child Hero Status Cards */
+.heroSection {
+  margin-bottom: 24px;
+}
+
+.heroHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.heroSectionTitle {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slate-500);
+  margin: 0;
+}
+
+.heroAddChildBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--white);
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.heroAddChildBtn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.heroChildList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.childHeroCard {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  padding: 16px;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.childHeroCardActive {
+  border-color: var(--primary);
+  background: linear-gradient(145deg, #ffffff 0%, var(--primary-light) 100%);
+  box-shadow: 0 4px 16px rgba(29, 158, 117, 0.16);
+}
+
+.cardMainRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.childInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nameBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.heroAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--slate-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.heroName {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--slate-900);
+}
+
+.heroAge {
+  font-size: 12px;
+  color: var(--slate-500);
+  margin: 2px 0 0 0;
+}
+
+.activeBadge {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--primary);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+.switchBadge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--slate-500);
+  background: var(--slate-100);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.expandToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--slate-50);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--slate-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.expandToggleBtn:hover {
+  background: var(--slate-100);
+  color: var(--slate-900);
+}
+
+.expandLabel {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.chevron {
+  font-size: 9px;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.heroSummaryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.summaryBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  background: var(--slate-50);
+  border: 1px solid var(--border);
+  color: var(--slate-700);
+}
+
+.badgeIcon {
+  font-size: 12px;
+}
+
+.badgeText {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.redFlagBadge {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.pendingVaxBadge {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #d97706;
+}
+
+.neutralBadge {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #16a34a;
+}
+
+.expandedDetails {
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.expandDetailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.expandDetailItem {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.detailItemLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--slate-400);
+  text-transform: uppercase;
+}
+
+.detailItemVal {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-800);
+  margin-top: 2px;
+}
+
+/* Milestone Highlights Section (Tabbed Full-Width Card) */
+.milestoneHighlightSection {
+  margin-bottom: 24px;
+}
+
+.tabbedCard {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabHeader {
+  display: flex;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border);
+  padding: 6px;
+  gap: 6px;
+}
+
+.tabButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-600);
+  background: transparent;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabButtonActive {
+  background: white;
+  color: var(--slate-900);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  font-weight: 800;
+}
+
+.tabButtonActiveUpcoming {
+  border-bottom: 3px solid #3b82f6;
+  color: #1d4ed8;
+}
+
+.tabButtonActiveAchieved {
+  border-bottom: 3px solid var(--primary);
+  color: var(--primary);
+}
+
+.tabBadge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.06);
+  color: inherit;
+}
+
+.tabContent {
+  padding: 16px;
+}
+
+.targetStageSubheader {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate-500);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.targetStageBadge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.highlightCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.highlightCardTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--slate-900);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.highlightCardCount {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: var(--slate-100);
+  color: var(--slate-700);
+}
+
+.highlightCardList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.highlightCardItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.highlightItemMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.domainChip {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--slate-100);
+  color: var(--slate-700);
+}
+
+.ageChip {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--slate-500);
+}
+
+.highlightItemText {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate-800);
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* Assessment Toast */
+.assessmentToast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #ecfdf5;
+  border: 1.5px solid #10b981;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.toast_watch {
+  background: #fffbeb;
+  border-color: var(--amber);
+}
+
+.toast_lagging {
+  background: #fff1f2;
+  border-color: var(--coral);
+}
+
+.toastIcon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.toastContent {
+  flex: 1;
+}
+
+.toastContent h4 {
+  margin: 0 0 2px 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.toastContent p {
+  margin: 0;
+  font-size: 12px;
+  color: #475569;
+}
+
+.toastClose {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: var(--slate-400);
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Persistent Assessment Section */
+.assessmentSection {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.assessmentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.assessmentTitle {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--slate-900);
+}
+
+.assessmentStatusBadge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status_on_track {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.status_watch {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.status_lagging {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.assessmentMessage {
+  font-size: 13px;
+  color: var(--slate-600);
+  line-height: 1.5;
+  margin: 0 0 14px 0;
+}
+
+.recommendationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--slate-100);
+}
+
+.recommendationCard {
+  background: #f8fafc;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  border-left: 3px solid var(--primary);
+}
+
+.recMilestone {
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: var(--slate-800);
+}
+
+.recSuggestion {
+  margin: 0;
+  color: var(--slate-600);
+  font-size: 12px;
+}
+

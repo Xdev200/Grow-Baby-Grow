@@ -1,4 +1,5 @@
-export type Domain = 'gross_motor' | 'fine_motor' | 'language' | 'socio_adaptive' | 'hearing_vision';
+export type Domain = 'gross_motor' | 'fine_motor' | 'language' | 'socio_adaptive' | 'hearing' | 'vision';
+
 
 export type MilestoneStatus = 'achieved' | 'not_yet' | 'partial' | 'deferred';
 

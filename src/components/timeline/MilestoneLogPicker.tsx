@@ -6,7 +6,7 @@ import milestonesData from '../../data/milestones_aiims.json';
 import styles from './MilestonePicker.module.css';
 
 const ALL_MILESTONES = milestonesData as MilestoneMaster[];
-const DOMAINS: Domain[] = ['gross_motor', 'fine_motor', 'language', 'socio_adaptive', 'hearing_vision'];
+const DOMAINS: Domain[] = ['hearing', 'vision', 'gross_motor', 'fine_motor', 'language', 'socio_adaptive'];
 
 interface MilestoneLogPickerProps {
   onClose: () => void;

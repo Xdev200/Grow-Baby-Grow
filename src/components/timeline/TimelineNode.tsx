@@ -27,6 +27,8 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
     fine_motor: '#f0fdf4',
     language: '#eff6ff',
     socio_adaptive: '#faf5ff',
+    hearing: '#ecfeff',
+    vision: '#f5f3ff',
     hearing_vision: '#fff1f2'
   };
 
@@ -35,6 +37,8 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
     fine_motor: '#16a34a',
     language: '#2563eb',
     socio_adaptive: '#9333ea',
+    hearing: '#0891b2',
+    vision: '#7c3aed',
     hearing_vision: '#e11d48'
   };
 
@@ -44,8 +48,7 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
 
   // For domain text, since domain is in the format 'gross_motor' etc., we can translate it if needed. 
   // Let's use `t` for domain, or leave as is if not in translation file. 
-  // Wait, domain is translated in `onboarding` or `dashboard` perhaps?
-  // Let's just use `domain.replace('_', ' ')` for now, or check translation later. We'll use t(`domain.${milestone.domain}`, { defaultValue: milestone.domain.replace('_', ' ') })
+  // We'll use t(`domain.${milestone.domain}`, { defaultValue: milestone.domain.replace('_', ' ') })
   const translatedDomain = t(`domains.${milestone.domain}`, { defaultValue: milestone.domain.replace('_', ' ') });
 
   return (
@@ -69,6 +72,9 @@ export const TimelineNode: React.FC<TimelineNodeProps> = ({
             <details className={styles.details}>
               <summary className={styles.summary}>
                 <span>{t('timeline_node.parent_friendly_info', 'Parent-friendly info & test')}</span>
+                <svg className={styles.chevronIcon} viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
               </summary>
               <div className={styles.detailsContent}>
                 {translatedLaymanDesc && (

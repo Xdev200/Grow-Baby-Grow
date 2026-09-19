@@ -11,6 +11,7 @@ import { PrivacyScreen } from './screens/PrivacyScreen';
 import { TermsScreen } from './screens/TermsScreen';
 import { VaccinationScreen } from './screens/VaccinationScreen';
 import { BottomNav } from './components/navigation/BottomNav';
+import { GlobalHeader } from './components/navigation/GlobalHeader';
 import './App.css';
 
 const AppRoutes = () => {
@@ -26,6 +27,7 @@ const AppRoutes = () => {
 
   return (
     <div className="app-layout">
+      {activeChild && <GlobalHeader />}
       <Routes>
         <Route 
           path="/" 

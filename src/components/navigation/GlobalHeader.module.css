@@ -1,0 +1,190 @@
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--slate-900);
+}
+
+.brandLogo {
+  font-size: 20px;
+}
+
+.brandName {
+  font-size: 15px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+  color: var(--slate-900);
+}
+
+.switcherWrapper {
+  position: relative;
+  z-index: 60;
+}
+
+.switcherButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--slate-100);
+  border: 1px solid var(--slate-200);
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.switcherButton:hover {
+  background: var(--slate-200);
+}
+
+.childAvatar {
+  font-size: 16px;
+}
+
+.childName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-800);
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  color: var(--slate-500);
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  z-index: 70;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.dropdownTitle {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate-400);
+  padding: 6px 8px 4px;
+  margin: 0;
+}
+
+.childList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.childItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.childItem:hover {
+  background: var(--slate-100);
+}
+
+.childItemActive {
+  background: var(--primary-light);
+}
+
+.childItemActive .itemName {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.itemLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.itemName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-800);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activeCheck {
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--slate-100);
+  margin: 6px 0;
+}
+
+.addChildButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.addChildButton:hover {
+  background: var(--primary-light);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+}
