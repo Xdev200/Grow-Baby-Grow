@@ -12,7 +12,6 @@ export const BottomNav: React.FC = () => {
         to="/" 
         className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
       >
-        <span className={styles.icon}>🏠</span>
         <span className={styles.label}>{t('common.home')}</span>
       </NavLink>
       
@@ -20,7 +19,6 @@ export const BottomNav: React.FC = () => {
         to="/timeline" 
         className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
       >
-        <span className={styles.icon}>📈</span>
         <span className={styles.label}>{t('common.track')}</span>
       </NavLink>
 
@@ -28,7 +26,6 @@ export const BottomNav: React.FC = () => {
         to="/growth" 
         className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
       >
-        <span className={styles.icon}>📏</span>
         <span className={styles.label}>{t('common.growth')}</span>
       </NavLink>
 
@@ -36,7 +33,6 @@ export const BottomNav: React.FC = () => {
         to="/vaccination" 
         className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
       >
-        <span className={styles.icon}>💉</span>
         <span className={styles.label}>{t('common.vaccines')}</span>
       </NavLink>
 
@@ -44,7 +40,6 @@ export const BottomNav: React.FC = () => {
         to="/profile" 
         className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
       >
-        <span className={styles.icon}>👶</span>
         <span className={styles.label}>{t('common.profile')}</span>
       </NavLink>
     </nav>

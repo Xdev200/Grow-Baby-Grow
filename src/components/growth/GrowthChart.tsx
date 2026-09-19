@@ -35,11 +35,9 @@ export const GrowthChart: React.FC<GrowthChartProps> = React.memo(({
   const getX = (m: number) => (m / maxAxisMonth) * (width - padding.left - padding.right) + padding.left;
   const getY = (v: number) => height - ((v / maxValue) * (height - padding.top - padding.bottom) + padding.bottom);
 
-  // Generate paths for all centiles
+  // Generate paths for core centiles
   const p3 = relevantData.map((d: any) => `${getX(d.month)},${getY(d.p3)}`).join(' ');
-  const p15 = relevantData.map((d: any) => `${getX(d.month)},${getY(d.p15)}`).join(' ');
   const p50 = relevantData.map((d: any) => `${getX(d.month)},${getY(d.p50)}`).join(' ');
-  const p85 = relevantData.map((d: any) => `${getX(d.month)},${getY(d.p85)}`).join(' ');
   const p97 = relevantData.map((d: any) => `${getX(d.month)},${getY(d.p97)}`).join(' ');
 
   // Area between P3 and P97 (Safety Zone)
@@ -92,38 +90,40 @@ export const GrowthChart: React.FC<GrowthChartProps> = React.memo(({
 
       <svg viewBox={`0 0 ${width} ${height}`} className={styles.svg}>
         {/* Shaded Normal Range Area */}
-        <polygon points={safetyArea} fill="rgba(16, 185, 129, 0.05)" />
+        <polygon points={safetyArea} fill="rgba(16, 185, 129, 0.08)" />
 
-        {/* Grid lines */}
-        <line x1={padding.left} y1={height - padding.bottom} x2={width - padding.right} y2={height - padding.bottom} stroke="#e2e8f0" />
-        <line x1={padding.left} y1={padding.top} x2={padding.left} y2={height - padding.bottom} stroke="#e2e8f0" />
+        {/* Horizontal reference grid lines */}
+        {[0.25, 0.5, 0.75, 1].map(p => {
+          const val = Math.round(maxValue * p);
+          const yPos = getY(val);
+          return (
+            <g key={p}>
+              <line x1={padding.left} y1={yPos} x2={width - padding.right} y2={yPos} stroke="#f1f5f9" strokeDasharray="2,2" />
+              <text x={padding.left - 6} y={yPos + 3} fontSize="9" fill="#94a3b8" textAnchor="end">{val}</text>
+            </g>
+          );
+        })}
+
+        {/* Base axes */}
+        <line x1={padding.left} y1={height - padding.bottom} x2={width - padding.right} y2={height - padding.bottom} stroke="#cbd5e1" strokeWidth="1.5" />
+        <line x1={padding.left} y1={padding.top} x2={padding.left} y2={height - padding.bottom} stroke="#cbd5e1" strokeWidth="1.5" />
 
         {/* X-axis labels (Age) */}
         {Array.from({ length: 6 }, (_, i) => Math.round((maxAxisMonth / 5) * i)).map(m => (
-          <text key={m} x={getX(m)} y={height - padding.bottom + 16} fontSize="9" fill="#94a3b8" textAnchor="middle">
+          <text key={m} x={getX(m)} y={height - padding.bottom + 16} fontSize="10" fontWeight="600" fill="#64748b" textAnchor="middle">
             {m === 0 ? 'Birth' : m >= 12 ? `${Math.floor(m/12)}y` : `${m}m`}
           </text>
         ))}
 
-        {/* Y-axis labels */}
-        {[0, 0.25, 0.5, 0.75, 1].map(p => {
-          const val = Math.round(maxValue * p);
-          return (
-            <text key={p} x={padding.left - 8} y={getY(val) + 3} fontSize="9" fill="#94a3b8" textAnchor="end">{val}</text>
-          );
-        })}
-
         {/* Percentile Curves */}
-        <polyline points={p3} fill="none" stroke="#cbd5e1" strokeWidth="1" strokeDasharray="3,3" />
-        <polyline points={p15} fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="4,2" />
-        <polyline points={p50} fill="none" stroke="var(--emerald)" strokeWidth="2" strokeOpacity="0.6" />
-        <polyline points={p85} fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="4,2" />
-        <polyline points={p97} fill="none" stroke="#cbd5e1" strokeWidth="1" strokeDasharray="3,3" />
+        <polyline points={p3} fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3,3" />
+        <polyline points={p50} fill="none" stroke="var(--emerald)" strokeWidth="2.5" />
+        <polyline points={p97} fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3,3" />
 
-        {/* Curve Labels */}
-        <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p50)} fontSize="8" fill="var(--emerald)">P50</text>
-        <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p97)} fontSize="8" fill="#cbd5e1">P97</text>
-        <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p3)} fontSize="8" fill="#cbd5e1">P3</text>
+        {/* Friendly Curve Labels */}
+        <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p97) + 3} fontSize="8" fontWeight="600" fill="#64748b">Top</text>
+        <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p50) + 3} fontSize="8" fontWeight="700" fill="var(--emerald)">Avg</text>
+        <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p3) + 3} fontSize="8" fontWeight="600" fill="#64748b">Low</text>
 
         {/* User Data Points */}
         {currentData.map((d, i) => {
@@ -131,34 +131,49 @@ export const GrowthChart: React.FC<GrowthChartProps> = React.memo(({
             Math.abs(curr.month - d.month) < Math.abs(prev.month - d.month) ? curr : prev
           );
           const isDeviated = d.value < ref.p3 || d.value > ref.p97;
+          const cx = getX(d.month);
+          const cy = getY(d.value);
           
           return (
             <g key={i}>
               <circle 
-                cx={getX(d.month)} 
-                cy={getY(d.value)} 
-                r="4" 
-                fill={isDeviated ? "var(--error)" : "#1e293b"} 
+                cx={cx} 
+                cy={cy} 
+                r="5" 
+                fill={isDeviated ? "var(--coral)" : "#0f172a"} 
                 stroke="white"
-                strokeWidth="1.5"
+                strokeWidth="2"
               />
               {i === currentData.length - 1 && (
-                <text 
-                  x={getX(d.month)} 
-                  y={getY(d.value) - 10} 
-                  fontSize="10" 
-                  fontWeight="bold" 
-                  fill={isDeviated ? "var(--error)" : "#1e293b"}
-                  textAnchor="middle"
-                >
-                  {d.value}
-                </text>
+                <g>
+                  <rect 
+                    x={cx - 20} 
+                    y={cy - 24} 
+                    width="40" 
+                    height="16" 
+                    rx="4" 
+                    fill="#0f172a" 
+                  />
+                  <text 
+                    x={cx} 
+                    y={cy - 13} 
+                    fontSize="9" 
+                    fontWeight="700" 
+                    fill="white"
+                    textAnchor="middle"
+                  >
+                    {d.value} {type === 'weight_for_age' ? 'kg' : 'cm'}
+                  </text>
+                </g>
               )}
             </g>
           );
         })}
       </svg>
-      <div className={styles.chartFooter}>{title}</div>
+      <div className={styles.chartFooter}>
+        <span>{title}</span>
+        <span style={{ fontSize: 11, color: 'var(--emerald)', fontWeight: 600 }}>● Shaded area = Typical Healthy Range</span>
+      </div>
       <div className={styles.insightSection}>
         <span className={styles.chartBadge} style={{ backgroundColor: statusColor }}>{status}</span>
         <p className={styles.laymanExplanation}>{explanation}</p>

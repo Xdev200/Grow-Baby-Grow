@@ -66,6 +66,8 @@
     "fine_motor": "Fine Motor",
     "language": "Language",
     "socio_adaptive": "Social",
+    "hearing": "Hearing",
+    "vision": "Vision",
     "hearing_vision": "Sensory"
   },
   "timeline_node": {
@@ -521,9 +523,9 @@
       "howToTest": "Ask your child 'What are we doing tomorrow?'. They should use future-tense words like 'will' or 'going to'."
     },
     "hv_000_1": {
-      "milestone": "Horizontal tracking of mother's face to 180 degrees; follows dangling ring to 45 degrees",
-      "laymanDescription": "The newborn can follow a face or a bright object moving slowly from side to side.",
-      "howToTest": "Hold your face about 10-12 inches from your baby and move slowly from one side to the other. See if their eyes follow you."
+      "milestone": "Horizontal tracking of mother's face to 45 degrees",
+      "laymanDescription": "The newborn can briefly fix and follow mother's face moving slowly from side to side.",
+      "howToTest": "Hold your face about 10-12 inches from your baby and move slowly from one side to the other. See if their eyes track your face."
     },
     "hv_001_1": {
       "milestone": "Vertical tracking; follows to 90 degrees",

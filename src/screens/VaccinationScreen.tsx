@@ -10,7 +10,7 @@ import { VaccineCatchupModal } from '../components/vaccination/CatchupModal';
 import { notificationService } from '../services/notificationService';
 import { storageService } from '../services/storage';
 import styles from '../components/vaccination/Vaccination.module.css';
-import { isBefore, startOfDay } from 'date-fns';
+import { isBefore, isAfter, startOfDay } from 'date-fns';
 
 type ScheduleItem = VaccineMaster & { log?: VaccineLog; dueDate: Date };
 
@@ -33,18 +33,6 @@ export const VaccinationScreen: React.FC = () => {
     const data = await vaccineService.getVaccineSchedule(activeChild);
     setSchedule(data);
     setLoading(false);
-
-    // Check if we need to show catch-up modal
-    const logs = await storageService.getVaccineLogs(activeChild.id);
-    const hasVisited = localStorage.getItem(`vax_visited_${activeChild.id}`);
-    
-    if (logs.length === 0 && !hasVisited) {
-      const today = startOfDay(new Date());
-      const pastVaccines = data.filter(item => isBefore(item.dueDate, today));
-      if (pastVaccines.length > 0) {
-        setShowCatchup(true);
-      }
-    }
   };
 
   useEffect(() => {
@@ -151,6 +139,13 @@ export const VaccinationScreen: React.FC = () => {
     fetchSchedule();
   };
 
+  const handleMarkNotGiven = async () => {
+    if (!activeChild || !selectedVaccine?.log) return;
+    await storageService.deleteVaccineLog(selectedVaccine.log.id);
+    setSelectedVaccine(null);
+    fetchSchedule();
+  };
+
   if (loading) {
     return <div className={styles.timelineContainer}>{t('vaccines.loading_schedule')}</div>;
   }
@@ -188,7 +183,8 @@ export const VaccinationScreen: React.FC = () => {
           <div key={ageLabel} className={styles.ageGroup}>
             <span className={styles.ageGroupLabel}>{ageLabel}</span>
             {vaccines.map(vaccine => {
-              const isFuture = !isBefore(vaccine.dueDate, today);
+              const isBirth = vaccine.ageWeeks === 0 || vaccine.ageLabel.toLowerCase().includes('birth');
+              const isFuture = !isBirth && isAfter(vaccine.dueDate, today);
               return (
                 <VaccineNode 
                   key={vaccine.id}
@@ -196,7 +192,6 @@ export const VaccinationScreen: React.FC = () => {
                   log={vaccine.log}
                   dueDate={vaccine.dueDate}
                   onLog={() => {
-                    if (isFuture && !vaccine.log) return; 
                     setSelectedVaccine(vaccine);
                   }}
                   isFuture={isFuture}
@@ -214,6 +209,7 @@ export const VaccinationScreen: React.FC = () => {
           initialDueDate={selectedVaccine.dueDate}
           onClose={() => setSelectedVaccine(null)}
           onSave={handleSaveLog}
+          onMarkNotGiven={handleMarkNotGiven}
         />
       )}
 
@@ -221,7 +217,10 @@ export const VaccinationScreen: React.FC = () => {
         <VaccineCatchupModal 
           childId={activeChild.id}
           pastVaccines={schedule
-            .filter(s => isBefore(s.dueDate, today))
+            .filter(s => {
+              const isBirth = s.ageWeeks === 0 || s.ageLabel.toLowerCase().includes('birth');
+              return isBirth || !isAfter(s.dueDate, today);
+            })
             .map(s => ({ vaccine: s, dueDate: s.dueDate }))}
           onConfirm={handleCatchupConfirm}
           onClose={() => {

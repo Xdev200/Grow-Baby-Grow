@@ -2,19 +2,32 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
 import { storageService } from '../services/storage';
-// import { LanguageSwitcher } from '../components/navigation/LanguageSwitcher';
+import { generateClinicalReport } from '../services/report';
+import { calculateAge } from '../utils/age';
+import type { Child } from '../types';
 import styles from './Profile.module.css';
 
 export const ProfileScreen: React.FC = () => {
-  const { activeChild, setChild } = useChild();
+  const { activeChild, children, selectChild, setChild } = useChild();
   const { t } = useTranslation();
 
-  const handleExport = async () => {
+  const handleExportChildPdf = async (child: Child) => {
     try {
-      const children = await storageService.getChildren();
+      const logs = await storageService.getMilestoneLogs(child.id);
+      const age = calculateAge(new Date(child.dob), child.gestationalWeeks);
+      generateClinicalReport(child, logs, age.displayAge, age.assessmentAgeMonths);
+    } catch (err) {
+      console.error('Export PDF error:', err);
+      alert('Failed to export clinical report PDF');
+    }
+  };
+
+  const handleExportBackup = async () => {
+    try {
+      const allChildren = await storageService.getChildren();
       const data = {
         exportDate: new Date().toISOString(),
-        children
+        children: allChildren
       };
       
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -24,11 +37,11 @@ export const ProfileScreen: React.FC = () => {
       a.download = `GrowBabyGrow_Backup_${new Date().toLocaleDateString()}.json`;
       a.click();
     } catch (err) {
-      alert('Export failed');
+      alert('Export backup failed');
     }
   };
 
-  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportBackup = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -37,7 +50,9 @@ export const ProfileScreen: React.FC = () => {
       try {
         const data = JSON.parse(event.target?.result as string);
         if (data.children && data.children.length > 0) {
-          await storageService.saveChild(data.children[0]);
+          for (const c of data.children) {
+            await storageService.saveChild(c);
+          }
           setChild(data.children[0]);
           alert('Data imported successfully!');
         }
@@ -48,7 +63,11 @@ export const ProfileScreen: React.FC = () => {
     reader.readAsText(file);
   };
 
-  if (!activeChild) return null;
+  const getChildEmoji = (gender: string) => {
+    if (gender === 'girl') return '👧';
+    if (gender === 'boy') return '👦';
+    return '👶';
+  };
 
   return (
     <div className={styles.container}>
@@ -57,25 +76,74 @@ export const ProfileScreen: React.FC = () => {
         <h1>{t('profile.child_profile')}</h1>
       </header>
 
-      <section className={styles.infoCard}>
-        <div className={styles.field}>
-          <label>{t('profile.name')}</label>
-          <p>{activeChild.name}</p>
-        </div>
-        <div className={styles.field}>
-          <label>{t('profile.dob')}</label>
-          <p>{new Date(activeChild.dob).toLocaleDateString()}</p>
-        </div>
-        <div className={styles.field}>
-          <label>{t('profile.gender')}</label>
-          <p>{activeChild.gender}</p>
+      {/* Children List with per-child PDF export */}
+      <section className={styles.childrenSection}>
+        <h2 className={styles.sectionTitle}>Registered Children ({children.length})</h2>
+        <div className={styles.childrenList}>
+          {children.map(child => {
+            const isActive = child.id === activeChild?.id;
+            const age = calculateAge(new Date(child.dob), child.gestationalWeeks);
+
+            return (
+              <div 
+                key={child.id} 
+                className={`${styles.childCard} ${isActive ? styles.childCardActive : ''}`}
+              >
+                <div className={styles.cardHeader}>
+                  <div className={styles.childBrief}>
+                    <span className={styles.childEmoji}>{getChildEmoji(child.gender)}</span>
+                    <div>
+                      <h3 className={styles.childName}>{child.name}</h3>
+                      <span className={styles.childAge}>{age.displayAge}</span>
+                    </div>
+                  </div>
+                  {isActive ? (
+                    <span className={styles.activeTag}>Active Child</span>
+                  ) : (
+                    <button 
+                      onClick={() => selectChild(child.id)} 
+                      className={styles.selectChildBtn}
+                    >
+                      Set Active
+                    </button>
+                  )}
+                </div>
+
+                <div className={styles.infoGrid}>
+                  <div className={styles.field}>
+                    <label>{t('profile.dob')}</label>
+                    <p>{new Date(child.dob).toLocaleDateString()}</p>
+                  </div>
+                  <div className={styles.field}>
+                    <label>{t('profile.gender')}</label>
+                    <p>{child.gender.toUpperCase()}</p>
+                  </div>
+                  {child.isPremature && (
+                    <div className={styles.field}>
+                      <label>Premature</label>
+                      <p>{child.gestationalWeeks} Weeks</p>
+                    </div>
+                  )}
+                </div>
+
+                <button 
+                  onClick={() => handleExportChildPdf(child)} 
+                  className={styles.pdfExportBtn}
+                  title={`Download Clinical Report (PDF) for ${child.name}`}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="12" y1="18" x2="12" y2="12" />
+                    <polyline points="9 15 12 18 15 15" />
+                  </svg>
+                  Export PDF Report
+                </button>
+              </div>
+            );
+          })}
         </div>
       </section>
-
-      {/* <section className={styles.backupSection}>
-        <h2>{t('common.language')}</h2>
-        <LanguageSwitcher />
-      </section> */}
 
       <section className={styles.backupSection}>
         <h2>{t('profile.data_management')}</h2>
@@ -84,13 +152,13 @@ export const ProfileScreen: React.FC = () => {
         </p>
         
         <div className={styles.buttonGroup}>
-          <button onClick={handleExport} className={styles.btnSecondary}>
+          <button onClick={handleExportBackup} className={styles.btnSecondary}>
             📤 {t('profile.export_backup')}
           </button>
           
           <label className={styles.btnSecondary}>
             📥 {t('profile.import_backup')}
-            <input type="file" accept=".json" onChange={handleImport} hidden />
+            <input type="file" accept=".json" onChange={handleImportBackup} hidden />
           </label>
         </div>
       </section>

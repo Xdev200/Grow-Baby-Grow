@@ -78,8 +78,8 @@ export const VaccineCatchupModal: React.FC<VaccineCatchupModalProps> = ({
     <div className={styles.modalOverlay}>
       <div className={`${styles.modalContent} ${styles.catchupModal}`}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>Welcome to Vaccine Tracker</h2>
-          <p className={styles.modalSubtitle}>Let's catch up on vaccines due till today</p>
+          <h2 className={styles.modalTitle}>Vaccine Status Check-in</h2>
+          <p className={styles.modalSubtitle}>Were these birth doses or due vaccines administered?</p>
         </div>
 
         <div className={styles.catchupList}>

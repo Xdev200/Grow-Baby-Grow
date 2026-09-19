@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
 import { calculateAge } from '../utils/age';
@@ -34,11 +34,12 @@ export const useAssessment = () => {
     if (!ageData) return [];
 
     const domains: { domain: Domain; name: string; color: string }[] = [
+      { domain: 'hearing' as Domain, name: t('domains.hearing', 'Hearing'), color: '#06b6d4' },
+      { domain: 'vision' as Domain, name: t('domains.vision', 'Vision'), color: '#8b5cf6' },
       { domain: 'gross_motor' as Domain, name: t('domains.gross_motor'), color: '#1D9E75' },
       { domain: 'fine_motor' as Domain, name: t('domains.fine_motor'), color: '#BA7517' },
       { domain: 'language' as Domain, name: t('domains.language'), color: '#3b82f6' },
       { domain: 'socio_adaptive' as Domain, name: t('domains.socio_adaptive'), color: '#D85A30' },
-      { domain: 'hearing_vision' as Domain, name: t('domains.hearing_vision'), color: '#8b5cf6' },
     ];
 
     // Filter milestones up to current age band
@@ -71,10 +72,16 @@ export const useAssessment = () => {
     });
   }, [ageData, logs]);
 
+  const refreshLogs = React.useCallback(() => {
+    if (activeChild) {
+      storageService.getMilestoneLogs(activeChild.id).then(setLogs);
+    }
+  }, [activeChild?.id]);
+
   return {
     ageData,
     domainProgress,
     triggeredRedFlags,
-    refreshLogs: () => activeChild && storageService.getMilestoneLogs(activeChild.id).then(setLogs)
+    refreshLogs
   };
 };

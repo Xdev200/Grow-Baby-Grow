@@ -1,7 +1,7 @@
 import React from 'react';
 import type { VaccineMaster, VaccineLog } from '../../types';
 import styles from './Vaccination.module.css';
-import { format } from 'date-fns';
+import { format, isBefore, startOfDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 interface VaccineNodeProps {
@@ -21,19 +21,23 @@ export const VaccineNode: React.FC<VaccineNodeProps> = ({
 }) => {
   const { t } = useTranslation();
   
+  const isBirth = vaccine.ageWeeks === 0 || vaccine.ageLabel?.toLowerCase().includes('birth');
   const isCompleted = log?.status === 'completed';
-  const isMissed = !isCompleted && !isFuture;
-  const displayDate = isCompleted && log.administeredDate 
+  const today = startOfDay(new Date());
+  const isMissed = !isCompleted && !isFuture && !isBirth && isBefore(dueDate, today);
+  const isPendingBirth = !isCompleted && isBirth;
+  
+  const displayDate = isCompleted && log?.administeredDate 
     ? new Date(log.administeredDate) 
     : (log?.dueDate ? new Date(log.dueDate) : dueDate);
 
-  const canLog = !isFuture || isCompleted;
+  const canLog = true;
   
   const translatedName = t(`vaccines_data.${vaccine.id}.name`, { defaultValue: vaccine.name });
   const translatedDesc = t(`vaccines_data.${vaccine.id}.description`, { defaultValue: vaccine.description });
 
   return (
-    <div className={`${styles.vaccineCard} ${isCompleted ? styles.vaccineCardCompleted : ''} ${isMissed ? styles.vaccineCardMissed : ''} ${vaccine.isOptional ? styles.vaccineCardOptional : ''}`}>
+    <div className={`${styles.vaccineCard} ${isCompleted ? styles.vaccineCardCompleted : ''} ${isMissed ? styles.vaccineCardMissed : ''} ${isPendingBirth ? styles.vaccineCardPendingBirth : ''} ${vaccine.isOptional ? styles.vaccineCardOptional : ''}`}>
       {vaccine.isOptional && <span className={styles.optionalBadge}>{t('vaccine_node.optional', 'Optional')}</span>}
       
       <div className={styles.cardHeader}>
@@ -61,21 +65,39 @@ export const VaccineNode: React.FC<VaccineNodeProps> = ({
       </div>
 
       <div className={styles.cardFooter}>
-        <div className={`${styles.statusLabel} ${isCompleted ? styles.statusCompleted : isMissed ? styles.statusMissed : styles.statusUpcoming}`}>
+        <div className={`${styles.statusLabel} ${
+          isCompleted 
+            ? styles.statusCompleted 
+            : isMissed 
+            ? styles.statusMissed 
+            : isPendingBirth
+            ? styles.statusPendingBirth
+            : styles.statusUpcoming
+        }`}>
           {isCompleted ? (
             <><span>✓</span> {t('vaccine_node.completed', 'Completed')}</>
           ) : isMissed ? (
             <><span>⚠</span> {t('vaccine_node.missed', 'Missed')}</>
+          ) : isPendingBirth ? (
+            <><span>⏰</span> {t('vaccine_node.pending_birth', 'Due at Birth (Pending)')}</>
           ) : (
             <><span>○</span> {isFuture ? t('vaccine_node.upcoming', 'Upcoming') : t('vaccine_node.scheduled', 'Scheduled')}</>
           )}
         </div>
         <button 
-          className={`${styles.logButton} ${!canLog ? styles.disabledButton : ''} ${isMissed ? styles.missedLogButton : ''}`} 
+          className={`${styles.logButton} ${isPendingBirth ? styles.birthLogButton : ''} ${isMissed ? styles.missedLogButton : ''}`} 
           onClick={onLog}
           disabled={!canLog}
         >
-          {isCompleted ? t('vaccine_node.edit', 'Edit') : isMissed ? t('vaccine_node.log_missed', 'Log Missed') : isFuture ? t('vaccine_node.upcoming', 'Upcoming') : t('vaccine_node.log_vaccine', 'Log Vaccine')}
+          {isCompleted 
+            ? t('vaccine_node.edit_date', 'Edit Date') 
+            : isMissed 
+            ? t('vaccine_node.enter_date_given', 'Enter Date Given') 
+            : isPendingBirth
+            ? t('vaccine_node.log_birth_dose', 'Log Vaccine')
+            : isFuture 
+            ? t('vaccine_node.view_upcoming', 'Log / View') 
+            : t('vaccine_node.log_vaccine', 'Log Vaccine')}
         </button>
       </div>
     </div>

@@ -21,7 +21,7 @@ export const useQuiz = () => {
     const allForAge = ALL_MILESTONES.filter(m => m.ageMonths <= assessmentAge);
     
     // Get latest milestone for EACH domain
-    const domains: Domain[] = ['hearing_vision', 'gross_motor', 'fine_motor', 'language', 'socio_adaptive'];
+    const domains: Domain[] = ['hearing', 'vision', 'gross_motor', 'fine_motor', 'language', 'socio_adaptive'];
     const questonableMilestones: MilestoneMaster[] = [];
 
     domains.forEach(domain => {
@@ -36,7 +36,7 @@ export const useQuiz = () => {
     });
 
     // Sort by domain: Prioritizing Hearing & Vision as requested
-    const domainOrder: Domain[] = ['hearing_vision', 'gross_motor', 'fine_motor', 'language', 'socio_adaptive'];
+    const domainOrder: Domain[] = ['hearing', 'vision', 'gross_motor', 'fine_motor', 'language', 'socio_adaptive'];
     const sorted = [...questonableMilestones].sort((a, b) => {
       if (a.domain !== b.domain) {
         return domainOrder.indexOf(a.domain) - domainOrder.indexOf(b.domain);
@@ -107,6 +107,12 @@ export const useQuiz = () => {
     }
   };
 
+  const goToPrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
+    }
+  };
+
   const skipQuiz = async () => {
     // Still perform auto-achievement even if quiz is skipped
     await saveResults({});
@@ -142,7 +148,10 @@ export const useQuiz = () => {
     currentMilestone,
     currentIndex,
     progress,
+    answers,
+    currentAnswer: currentMilestone ? answers[currentMilestone.id] : undefined,
     handleAnswer,
+    goToPrevious,
     skipQuiz,
     isComplete,
     calculateResults,

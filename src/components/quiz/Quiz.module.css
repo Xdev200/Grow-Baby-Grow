@@ -44,6 +44,36 @@
   font-weight: 600;
   color: #475569;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.skipButton:hover {
+  background: #e2e8f0;
+}
+
+.backButton {
+  background: white;
+  border: 1px solid var(--slate-200);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--slate-700);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.backButton:hover {
+  background: var(--slate-100);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .onboardingHeader {
@@ -169,7 +199,7 @@
 }
 
 .testSummary {
-  padding: 12px;
+  padding: 12px 14px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
@@ -177,11 +207,22 @@
   list-style: none;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
 }
 
 .testSummary::-webkit-details-marker {
   display: none;
+}
+
+.chevronIcon {
+  color: var(--slate-400);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.testDetails[open] .chevronIcon {
+  transform: rotate(180deg);
 }
 
 .testInstructions {

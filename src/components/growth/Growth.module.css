@@ -23,11 +23,32 @@
 
 .growthScreen {
   padding: 24px 16px;
-  padding-bottom: 100px;
+  padding-bottom: 16px;
 }
 
 .inputGroup {
-  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.childSelectInline {
+  margin-left: 12px;
+}
+
+.childSelectLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-500);
+}
+
+.childSelectDropdown {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-900);
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
 }
 
 .inputCard {
@@ -54,9 +75,13 @@
 }
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 32px;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.headerTitleRow {
+  display: flex;
+  align-items: center;
 }
 
 .title {
@@ -69,7 +94,13 @@
 .subtitle {
   font-size: 14px;
   color: #64748b;
-  margin: 4px 0 0 0 ;
+  margin: 4px 0 0 0;
+}
+
+.chartToggleRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
 }
 
 .tabToggle {

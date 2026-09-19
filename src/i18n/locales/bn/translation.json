@@ -66,6 +66,8 @@
     "fine_motor": "সূক্ষ্ম চালক দক্ষতা",
     "language": "ভাষা",
     "socio_adaptive": "সামাজিক",
+    "hearing": "শ্রবণ (শোনা)",
+    "vision": "দৃষ্টি (দেখা)",
     "hearing_vision": "সংবেদনশীল"
   }
 }

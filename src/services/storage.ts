@@ -135,6 +135,11 @@ export class StorageService {
     const db = await this.dbPromise;
     return db.getAllFromIndex('vaccine_logs', 'by-child', childId);
   }
+
+  async deleteVaccineLog(id: string): Promise<void> {
+    const db = await this.dbPromise;
+    await db.delete('vaccine_logs', id);
+  }
 }
 
 export const storageService = new StorageService();
