@@ -49,11 +49,6 @@ export class StorageService {
     return db.get('children', id);
   }
 
-  async getChildren(): Promise<Child[]> {
-    const db = await this.dbPromise;
-    return db.getAll('children');
-  }
-
   async getAllChildren(): Promise<Child[]> {
     const db = await this.dbPromise;
     return db.getAll('children');
@@ -67,8 +62,8 @@ export class StorageService {
     await tx.objectStore('children').delete(id);
     
     // Cleanup related data
-    const cleanupStore = async (name: string) => {
-      const store = tx.objectStore(name as any);
+    const cleanupStore = async (name: 'milestone_logs' | 'growth_measurements' | 'quiz_sessions' | 'vaccine_logs') => {
+      const store = tx.objectStore(name);
       const index = store.index('by-child');
       let cursor = await index.openKeyCursor(IDBKeyRange.only(id));
       while (cursor) {

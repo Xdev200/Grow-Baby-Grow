@@ -2,6 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useChild } from '../../context/ChildContext';
 import { storageService } from '../../services/storage';
 import type { MilestoneMaster, Domain } from '../../types';
+import { formatDomainNameUpper } from '../../utils/childHelpers';
+import { generateId } from '../../utils/id';
 import milestonesData from '../../data/milestones_aiims.json';
 import styles from './MilestonePicker.module.css';
 
@@ -29,7 +31,7 @@ export const MilestoneLogPicker: React.FC<MilestoneLogPickerProps> = ({ onClose 
     if (!activeChild) return;
 
     await storageService.saveMilestoneLog({
-      id: crypto.randomUUID(),
+      id: generateId('log'),
       childId: activeChild.id,
       milestoneId: milestone.id,
       status: 'achieved',
@@ -71,7 +73,7 @@ export const MilestoneLogPicker: React.FC<MilestoneLogPickerProps> = ({ onClose 
             className={`${styles.chip} ${selectedDomain === d ? styles.chipActive : ''}`}
             onClick={() => setSelectedDomain(d)}
           >
-            {d.replace('_', ' ').toUpperCase()}
+            {formatDomainNameUpper(d)}
           </div>
         ))}
       </div>

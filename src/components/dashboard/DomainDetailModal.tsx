@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Domain, MilestoneMaster, MilestoneLog } from '../../types';
+import { formatDomainNameUpper } from '../../utils/childHelpers';
 import styles from './Dashboard.module.css';
 
 interface DomainDetailModalProps {
@@ -15,7 +16,7 @@ export const DomainDetailModal: React.FC<DomainDetailModalProps> = ({
   logs, 
   onClose 
 }) => {
-  const domainTitle = domain.replace('_', ' ').toUpperCase();
+  const domainTitle = formatDomainNameUpper(domain);
   
   const getStatus = (milestoneId: string) => {
     const log = logs.find(l => l.milestoneId === milestoneId);

@@ -1,20 +1,19 @@
 import { useState, useMemo } from 'react';
 import { useChild } from '../context/ChildContext';
-import { calculateAge } from '../utils/age';
 import { storageService } from '../services/storage';
 import type { MilestoneStatus, Domain, MilestoneLog, MilestoneMaster } from '../types';
+import { generateId } from '../utils/id';
 import { PROCESSED_MILESTONES as ALL_MILESTONES } from '../data/milestoneProcessor';
 
 export const useQuiz = () => {
-  const { activeChild } = useChild();
+  const { activeChild, ageData } = useChild();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, MilestoneStatus>>({});
   const [isComplete, setIsComplete] = useState(false);
 
   // Group milestones by domain and filter for latest age bracket for EACH domain
   const { relevantMilestones, childAgeMonths, allAssessmentMilestones } = useMemo(() => {
-    if (!activeChild) return { relevantMilestones: [], childAgeMonths: 0, allAssessmentMilestones: [] };
-    const ageData = calculateAge(new Date(activeChild.dob), activeChild.gestationalWeeks);
+    if (!activeChild || !ageData) return { relevantMilestones: [], childAgeMonths: 0, allAssessmentMilestones: [] };
     const assessmentAge = ageData.assessmentAgeMonths;
     
     // AIIMS Standard: Assessment is done for milestones up to the current age band
@@ -61,7 +60,7 @@ export const useQuiz = () => {
 
     // 1. Create logs for the answered milestones
     const answeredLogs: MilestoneLog[] = Object.entries(finalAnswers).map(([id, s]) => ({
-      id: crypto?.randomUUID ? crypto.randomUUID() : `log-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: generateId('log'),
       childId: activeChild.id,
       milestoneId: id,
       status: s as MilestoneStatus,
@@ -73,7 +72,7 @@ export const useQuiz = () => {
     const autoAchievedLogs: MilestoneLog[] = allAssessmentMilestones
       .filter(m => !quizzedIds.has(m.id))
       .map(m => ({
-        id: crypto?.randomUUID ? crypto.randomUUID() : `log-auto-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: generateId('log-auto'),
         childId: activeChild.id,
         milestoneId: m.id,
         status: 'achieved' as MilestoneStatus,

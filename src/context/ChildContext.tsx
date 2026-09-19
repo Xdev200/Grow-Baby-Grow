@@ -1,9 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from 'react';
 import type { Child } from '../types';
 import { storageService } from '../services/storage';
+import { preferencesService } from '../services/preferencesService';
+import { calculateAge, type AgeResult } from '../utils/age';
 
 interface ChildContextType {
   activeChild: Child | null;
+  ageData: AgeResult | null;
   children: Child[];
   loading: boolean;
   setChild: (child: Child) => Promise<void>;
@@ -26,13 +29,13 @@ export const ChildProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       setAllChildren(data);
       
       // Auto-select latest child if none active
-      const activeId = localStorage.getItem('activeChildId');
+      const activeId = preferencesService.getActiveChildId();
       if (activeId) {
         const found = data.find(c => c.id === activeId);
         if (found) setActiveChild(found);
       } else if (data.length > 0) {
         setActiveChild(data[0]);
-        localStorage.setItem('activeChildId', data[0].id);
+        preferencesService.setActiveChildId(data[0].id);
       }
     } catch (error) {
       console.error('Failed to load children:', error);
@@ -49,14 +52,14 @@ export const ChildProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     await storageService.saveChild(child);
     await refreshChildren();
     setActiveChild(child);
-    localStorage.setItem('activeChildId', child.id);
+    preferencesService.setActiveChildId(child.id);
   };
 
   const selectChild = (id: string) => {
     const found = allChildren.find(c => c.id === id);
     if (found) {
       setActiveChild(found);
-      localStorage.setItem('activeChildId', id);
+      preferencesService.setActiveChildId(id);
     }
   };
 
@@ -64,7 +67,7 @@ export const ChildProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     await storageService.deleteChild(id);
     if (activeChild?.id === id) {
       setActiveChild(null);
-      localStorage.removeItem('activeChildId');
+      preferencesService.removeActiveChildId();
     }
     await refreshChildren();
   };
@@ -81,9 +84,15 @@ export const ChildProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setAllChildren(prev => prev.map(c => c.id === updated.id ? updated : c));
   };
 
+  const ageData = useMemo(() => {
+    if (!activeChild) return null;
+    return calculateAge(new Date(activeChild.dob), activeChild.gestationalWeeks);
+  }, [activeChild]);
+
   return (
     <ChildContext.Provider value={{ 
       activeChild, 
+      ageData,
       children: allChildren, 
       loading, 
       setChild, 

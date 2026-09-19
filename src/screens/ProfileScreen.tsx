@@ -1,14 +1,17 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
+import { useToast } from '../context/ToastContext';
 import { storageService } from '../services/storage';
 import { generateClinicalReport } from '../services/report';
 import { calculateAge } from '../utils/age';
+import { getChildEmoji } from '../utils/childHelpers';
 import type { Child } from '../types';
 import styles from './Profile.module.css';
 
 export const ProfileScreen: React.FC = () => {
   const { activeChild, children, selectChild, setChild } = useChild();
+  const { showToast } = useToast();
   const { t } = useTranslation();
 
   const handleExportChildPdf = async (child: Child) => {
@@ -16,28 +19,52 @@ export const ProfileScreen: React.FC = () => {
       const logs = await storageService.getMilestoneLogs(child.id);
       const age = calculateAge(new Date(child.dob), child.gestationalWeeks);
       generateClinicalReport(child, logs, age.displayAge, age.assessmentAgeMonths);
+      showToast({ status: 'success', title: 'Export Successful', message: `Report generated for ${child.name}` });
     } catch (err) {
       console.error('Export PDF error:', err);
-      alert('Failed to export clinical report PDF');
+      showToast({ status: 'danger', title: 'Export Failed', message: 'Failed to export clinical report PDF' });
     }
   };
 
   const handleExportBackup = async () => {
     try {
-      const allChildren = await storageService.getChildren();
+      const allChildren = await storageService.getAllChildren();
+      const milestoneLogs: any[] = [];
+      const growthMeasurements: any[] = [];
+      const quizSessions: any[] = [];
+      const vaccineLogs: any[] = [];
+
+      for (const child of allChildren) {
+        const mLogs = await storageService.getMilestoneLogs(child.id);
+        const gMeas = await storageService.getGrowthMeasurements(child.id);
+        const qSess = await storageService.getQuizSessions(child.id);
+        const vLogs = await storageService.getVaccineLogs(child.id);
+
+        milestoneLogs.push(...mLogs);
+        growthMeasurements.push(...gMeas);
+        quizSessions.push(...qSess);
+        vaccineLogs.push(...vLogs);
+      }
+
       const data = {
+        version: 2,
         exportDate: new Date().toISOString(),
-        children: allChildren
+        children: allChildren,
+        milestoneLogs,
+        growthMeasurements,
+        quizSessions,
+        vaccineLogs,
       };
-      
+
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `GrowBabyGrow_Backup_${new Date().toLocaleDateString()}.json`;
+      a.download = `GrowBabyGrow_FullBackup_${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
+      showToast({ status: 'success', title: 'Backup Exported', message: 'Complete data backup exported successfully' });
     } catch (err) {
-      alert('Export backup failed');
+      showToast({ status: 'danger', title: 'Export Failed', message: 'Export backup failed' });
     }
   };
 
@@ -53,21 +80,42 @@ export const ProfileScreen: React.FC = () => {
           for (const c of data.children) {
             await storageService.saveChild(c);
           }
-          setChild(data.children[0]);
-          alert('Data imported successfully!');
+
+          if (Array.isArray(data.milestoneLogs)) {
+            for (const log of data.milestoneLogs) {
+              await storageService.saveMilestoneLog(log);
+            }
+          }
+
+          if (Array.isArray(data.growthMeasurements)) {
+            for (const g of data.growthMeasurements) {
+              await storageService.saveGrowthMeasurement(g);
+            }
+          }
+
+          if (Array.isArray(data.quizSessions)) {
+            for (const q of data.quizSessions) {
+              await storageService.saveQuizSession(q);
+            }
+          }
+
+          if (Array.isArray(data.vaccineLogs)) {
+            for (const v of data.vaccineLogs) {
+              await storageService.saveVaccineLog(v);
+            }
+          }
+
+          await setChild(data.children[0]);
+          showToast({ status: 'success', title: 'Import Complete', message: 'All child profiles & history restored!' });
         }
       } catch (err) {
-        alert('Invalid backup file');
+        showToast({ status: 'danger', title: 'Import Error', message: 'Invalid backup file' });
       }
     };
     reader.readAsText(file);
   };
 
-  const getChildEmoji = (gender: string) => {
-    if (gender === 'girl') return '👧';
-    if (gender === 'boy') return '👦';
-    return '👶';
-  };
+
 
   return (
     <div className={styles.container}>

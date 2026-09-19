@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
-import { vaccineService } from '../services/vaccineService';
+import { useToast } from '../context/ToastContext';
+import { vaccineService, isBirthDose } from '../services/vaccineService';
 import type { VaccineMaster, VaccineLog } from '../types';
 import { VaccineNode } from '../components/vaccination/VaccineNode';
 import { VaccineLogModal } from '../components/vaccination/VaccineLogModal';
 import { VaccineReminderModal } from '../components/vaccination/VaccineReminderModal';
 import { VaccineCatchupModal } from '../components/vaccination/CatchupModal';
-import { notificationService } from '../services/notificationService';
+import { notificationService, generateNotificationId } from '../services/notificationService';
 import { storageService } from '../services/storage';
+import { preferencesService } from '../services/preferencesService';
 import styles from '../components/vaccination/Vaccination.module.css';
 import { isBefore, isAfter, startOfDay } from 'date-fns';
 
@@ -16,6 +18,7 @@ type ScheduleItem = VaccineMaster & { log?: VaccineLog; dueDate: Date };
 
 export const VaccinationScreen: React.FC = () => {
   const { activeChild } = useChild();
+  const { showToast } = useToast();
   const { t } = useTranslation();
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +26,7 @@ export const VaccinationScreen: React.FC = () => {
   const [showCatchup, setShowCatchup] = useState(false);
   
   const [remindersEnabled, setRemindersEnabled] = useState(
-    localStorage.getItem(`vax_reminders_${activeChild?.id}`) === 'true'
+    activeChild ? preferencesService.getVaccineReminders(activeChild.id) : false
   );
   const [showReminderModal, setShowReminderModal] = useState(false);
 
@@ -33,6 +36,19 @@ export const VaccinationScreen: React.FC = () => {
     const data = await vaccineService.getVaccineSchedule(activeChild);
     setSchedule(data);
     setLoading(false);
+
+    // Auto-trigger catch-up drawer if unlogged due vaccines exist for child's age
+    const today = startOfDay(new Date());
+    const hasVisited = preferencesService.getVaccineVisited(activeChild.id);
+    const unloggedDue = data.filter(s => {
+      const isCompleted = s.log?.status === 'completed';
+      if (isCompleted) return false;
+      return isBirthDose(s) || !isAfter(s.dueDate, today);
+    });
+
+    if (unloggedDue.length > 0 && !hasVisited) {
+      setShowCatchup(true);
+    }
   };
 
   useEffect(() => {
@@ -43,7 +59,7 @@ export const VaccinationScreen: React.FC = () => {
     for (const log of logs) {
       await storageService.saveVaccineLog(log);
     }
-    localStorage.setItem(`vax_visited_${activeChild?.id}`, 'true');
+    if (activeChild) preferencesService.setVaccineVisited(activeChild.id);
     setShowCatchup(false);
     fetchSchedule();
   };
@@ -57,18 +73,18 @@ export const VaccinationScreen: React.FC = () => {
     if (enabled) {
       const hasPermission = await notificationService.requestPermissions();
       if (!hasPermission) {
-        alert(t('vaccines.permission_required'));
+        showToast({ status: 'warning', title: 'Permission Required', message: t('vaccines.permission_required') });
         return;
       }
       if (nextVaccine) {
         setShowReminderModal(true);
-      } else {
+      } else if (activeChild) {
         setRemindersEnabled(true);
-        localStorage.setItem(`vax_reminders_${activeChild?.id}`, 'true');
+        preferencesService.setVaccineReminders(activeChild.id, true);
       }
-    } else {
+    } else if (activeChild) {
       setRemindersEnabled(false);
-      localStorage.setItem(`vax_reminders_${activeChild?.id}`, 'false');
+      preferencesService.setVaccineReminders(activeChild.id, false);
       await notificationService.cancelAll();
     }
   };
@@ -86,7 +102,7 @@ export const VaccinationScreen: React.FC = () => {
     };
 
     await storageService.saveVaccineLog(log);
-    const notificationId = Math.abs(nextVaccine.id.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0));
+    const notificationId = generateNotificationId(nextVaccine.id);
     
     await notificationService.scheduleVaccineReminder(
       notificationId,
@@ -97,11 +113,11 @@ export const VaccinationScreen: React.FC = () => {
     );
 
     setRemindersEnabled(true);
-    localStorage.setItem(`vax_reminders_${activeChild.id}`, 'true');
+    preferencesService.setVaccineReminders(activeChild.id, true);
     setShowReminderModal(false);
     fetchSchedule();
     
-    alert(t('vaccines.reminder_set', { name: nextVaccine.name }));
+    showToast({ status: 'success', title: 'Reminder Set', message: t('vaccines.reminder_set', { name: nextVaccine.name }) });
   };
 
   const groupedSchedule = useMemo(() => {
@@ -131,7 +147,7 @@ export const VaccinationScreen: React.FC = () => {
     await storageService.saveVaccineLog(log);
 
     if (status === 'completed') {
-      const notificationId = Math.abs(selectedVaccine.id.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0));
+      const notificationId = generateNotificationId(selectedVaccine.id);
       await notificationService.cancelNotification(notificationId);
     }
 
@@ -183,7 +199,7 @@ export const VaccinationScreen: React.FC = () => {
           <div key={ageLabel} className={styles.ageGroup}>
             <span className={styles.ageGroupLabel}>{ageLabel}</span>
             {vaccines.map(vaccine => {
-              const isBirth = vaccine.ageWeeks === 0 || vaccine.ageLabel.toLowerCase().includes('birth');
+              const isBirth = isBirthDose(vaccine);
               const isFuture = !isBirth && isAfter(vaccine.dueDate, today);
               return (
                 <VaccineNode 
@@ -217,14 +233,11 @@ export const VaccinationScreen: React.FC = () => {
         <VaccineCatchupModal 
           childId={activeChild.id}
           pastVaccines={schedule
-            .filter(s => {
-              const isBirth = s.ageWeeks === 0 || s.ageLabel.toLowerCase().includes('birth');
-              return isBirth || !isAfter(s.dueDate, today);
-            })
+            .filter(s => s.log?.status !== 'completed' && (isBirthDose(s) || !isAfter(s.dueDate, today)))
             .map(s => ({ vaccine: s, dueDate: s.dueDate }))}
           onConfirm={handleCatchupConfirm}
           onClose={() => {
-            localStorage.setItem(`vax_visited_${activeChild.id}`, 'true');
+            if (activeChild) preferencesService.setVaccineVisited(activeChild.id);
             setShowCatchup(false);
           }}
         />

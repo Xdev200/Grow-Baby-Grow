@@ -1,9 +1,8 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import type { Child, MilestoneLog, MilestoneMaster } from '../types';
-import milestonesData from '../data/milestones_aiims.json';
-
-const ALL_MILESTONES = milestonesData as MilestoneMaster[];
+import type { Child, MilestoneLog } from '../types';
+import { formatDomainNameUpper } from '../utils/childHelpers';
+import { PROCESSED_MILESTONES as ALL_MILESTONES } from '../data/milestoneProcessor';
 
 export const generateClinicalReport = (
   child: Child,
@@ -59,7 +58,7 @@ export const generateClinicalReport = (
       head: [['Milestone', 'Domain', 'Clinical Threshold']],
       body: missedRedFlags.map(m => [
         m.milestone,
-        m.domain.replace('_', ' ').toUpperCase(),
+        formatDomainNameUpper(m.domain),
         `${m.ageMonths} Months`
       ]),
       headStyles: { fillColor: [225, 29, 72] }
@@ -67,7 +66,8 @@ export const generateClinicalReport = (
   }
 
   // 4. Milestone Summary Table
-  const lastY = (doc as any).lastAutoTable?.finalY || 100;
+  const docWithTable = doc as jsPDF & { lastAutoTable?: { finalY: number } };
+  const lastY = docWithTable.lastAutoTable?.finalY || 100;
   doc.setTextColor(0);
   doc.setFontSize(12);
   doc.text('Achievement Summary', 20, lastY + 20);

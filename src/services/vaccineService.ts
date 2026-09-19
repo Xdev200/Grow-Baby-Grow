@@ -3,6 +3,14 @@ import type { VaccineMaster, VaccineLog, Child } from '../types';
 import vaccinationData from '../data/vaccinations.json';
 import { addWeeks, addMonths, parseISO } from 'date-fns';
 
+/**
+ * Determines if a vaccine is a birth dose.
+ * Previously duplicated as inline `isBirth` checks in 5+ locations.
+ */
+export const isBirthDose = (vaccine: { ageWeeks?: number; ageLabel: string }): boolean => {
+  return vaccine.ageWeeks === 0 || vaccine.ageLabel.toLowerCase().includes('birth');
+};
+
 export class VaccineService {
   private masterData: VaccineMaster[] = vaccinationData as VaccineMaster[];
 

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '../hooks/useQuiz';
 import { useChild } from '../context/ChildContext';
 import { QuestionCard } from '../components/quiz/QuestionCard';
+import { formatDomainNameUpper } from '../utils/childHelpers';
+import { preferencesService } from '../services/preferencesService';
 import styles from '../components/quiz/Quiz.module.css';
 
 export const QuizScreen: React.FC = () => {
@@ -32,10 +34,7 @@ export const QuizScreen: React.FC = () => {
       };
       sessionStorage.setItem(`recent_assessment_${activeChild.id}`, JSON.stringify(assessmentData));
 
-      // Record first assessment completion timestamp if not already saved
-      if (!localStorage.getItem(`first_assessment_completed_at_${activeChild.id}`)) {
-        localStorage.setItem(`first_assessment_completed_at_${activeChild.id}`, Date.now().toString());
-      }
+      preferencesService.setLastAssessmentCompletedAt(activeChild.id, new Date().toISOString());
 
       navigate('/', { replace: true, state: { showAssessmentToast: true, assessmentData } });
     }
@@ -99,7 +98,7 @@ export const QuizScreen: React.FC = () => {
           {currentMilestone.domain === 'hearing' && '👂'}
           {currentMilestone.domain === 'vision' && '👁️'}
         </span>
-        <h2>{currentMilestone.domain.replace('_', ' ').toUpperCase()}</h2>
+        <h2>{formatDomainNameUpper(currentMilestone.domain)}</h2>
       </div>
 
       <QuestionCard 

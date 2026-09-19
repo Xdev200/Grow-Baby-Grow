@@ -1,5 +1,6 @@
 import React from 'react';
 import type { VaccineMaster, VaccineLog } from '../../types';
+import { isBirthDose } from '../../services/vaccineService';
 import styles from './Vaccination.module.css';
 import { format, isBefore, startOfDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +22,7 @@ export const VaccineNode: React.FC<VaccineNodeProps> = ({
 }) => {
   const { t } = useTranslation();
   
-  const isBirth = vaccine.ageWeeks === 0 || vaccine.ageLabel?.toLowerCase().includes('birth');
+  const isBirth = isBirthDose(vaccine);
   const isCompleted = log?.status === 'completed';
   const today = startOfDay(new Date());
   const isMissed = !isCompleted && !isFuture && !isBirth && isBefore(dueDate, today);

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useTimeline } from '../hooks/useTimeline';
 import { TimelineNode } from '../components/timeline/TimelineNode';
 import { MilestoneLogPicker } from '../components/timeline/MilestoneLogPicker';
+import { formatDomainNameUpper } from '../utils/childHelpers';
 import type { MilestoneMaster } from '../types';
 import styles from '../components/timeline/Timeline.module.css';
 
@@ -53,9 +54,9 @@ export const TimelineScreen: React.FC = () => {
               
               {Object.entries(groupedData[age]).map(([domain, milestones]) => (
                 <div key={domain} className={styles.domainGroup}>
-                  <h4 className={styles.domainHeaderSmall}>{domain.replace('_', ' ').toUpperCase()}</h4>
+                  <h4 className={styles.domainHeaderSmall}>{formatDomainNameUpper(domain)}</h4>
                   {milestones.map(m => {
-                    const log = milestoneLogs.find((l: any) => l.milestoneId === m.id);
+                    const log = milestoneLogs.find(l => l.milestoneId === m.id);
                     const isAchieved = log?.status === 'achieved';
                     
                     return (

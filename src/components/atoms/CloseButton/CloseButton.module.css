@@ -1,0 +1,41 @@
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--slate-400, #94a3b8);
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.closeBtn:hover {
+  color: var(--slate-800, #1e293b);
+  background-color: var(--slate-100, #f1f5f9);
+}
+
+.closeBtn:focus-visible {
+  outline: 2px solid var(--primary, #10b981);
+  outline-offset: 2px;
+}
+
+.sm {
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+}
+
+.md {
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+}
+
+.lg {
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
+}

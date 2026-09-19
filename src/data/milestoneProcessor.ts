@@ -15,21 +15,8 @@ import type { MilestoneMaster } from '../types';
 const NEVER_SPLIT_DOMAINS: string[] = ['hearing', 'vision'];
 
 export const getProcessedMilestones = (): MilestoneMaster[] => {
-  return (milestonesData as MilestoneMaster[]).flatMap(m => {
-    // Don't split hearing/vision milestones — they are compound descriptions
-    if (NEVER_SPLIT_DOMAINS.includes(m.domain)) {
-      return [m];
-    }
-    if (m.milestone.includes(';')) {
-      return m.milestone.split(';').map((text, i) => ({
-        ...m,
-        id: `${m.id}_${i}`,
-        milestone: text.trim(),
-        originalId: m.id // Keep track of parent for reporting
-      }));
-    }
-    return [m];
-  });
+  return milestonesData as MilestoneMaster[];
 };
 
 export const PROCESSED_MILESTONES = getProcessedMilestones();
+
