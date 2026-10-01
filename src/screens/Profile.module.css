@@ -224,8 +224,8 @@
 }
 
 .btnSecondary:hover {
-  border-color: var(--emerald-500, #10b981);
-  color: var(--emerald-600, #059669);
+  border-color: var(--primary);
+  color: var(--primary-dark);
   background: #fafafa;
 }
 

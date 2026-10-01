@@ -1,0 +1,77 @@
+.toastContainer {
+  position: fixed;
+  top: calc(var(--safe-top, 0px) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  width: calc(100% - 32px);
+  max-width: 440px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg, 16px);
+  background-color: var(--white, #ffffff);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid var(--primary, #10b981);
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-900, #0f172a);
+  margin: 0 0 2px 0;
+}
+
+.message {
+  font-size: 13px;
+  color: var(--slate-600, #475569);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Status variants */
+.on_track, .success {
+  border-left-color: var(--primary, #10b981);
+}
+
+.watch, .warning {
+  border-left-color: var(--amber, #f59e0b);
+}
+
+.lagging, .danger {
+  border-left-color: var(--coral, #f43f5e);
+}
+
+.info {
+  border-left-color: var(--secondary, #3b82f6);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

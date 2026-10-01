@@ -54,7 +54,7 @@ export const GrowthChart: React.FC<GrowthChartProps> = React.memo(({
   // Determine Current Status (Layman Language)
   const latestPoint = currentData[currentData.length - 1];
   let status = 'Growing Healthy';
-  let statusColor = 'var(--emerald)';
+  let statusColor = 'var(--primary)';
   let explanation = 'Your child is tracking within the typical healthy growth range.';
   
   if (latestPoint && latestPoint.month <= maxAxisMonth) {
@@ -117,12 +117,12 @@ export const GrowthChart: React.FC<GrowthChartProps> = React.memo(({
 
         {/* Percentile Curves */}
         <polyline points={p3} fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3,3" />
-        <polyline points={p50} fill="none" stroke="var(--emerald)" strokeWidth="2.5" />
+        <polyline points={p50} fill="none" stroke="var(--primary)" strokeWidth="2.5" />
         <polyline points={p97} fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3,3" />
 
         {/* Friendly Curve Labels */}
         <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p97) + 3} fontSize="8" fontWeight="600" fill="#64748b">Top</text>
-        <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p50) + 3} fontSize="8" fontWeight="700" fill="var(--emerald)">Avg</text>
+        <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p50) + 3} fontSize="8" fontWeight="700" fill="var(--primary)">Avg</text>
         <text x={width - padding.right + 4} y={getY(relevantData[relevantData.length - 1].p3) + 3} fontSize="8" fontWeight="600" fill="#64748b">Low</text>
 
         {/* User Data Points */}
@@ -172,7 +172,7 @@ export const GrowthChart: React.FC<GrowthChartProps> = React.memo(({
       </svg>
       <div className={styles.chartFooter}>
         <span>{title}</span>
-        <span style={{ fontSize: 11, color: 'var(--emerald)', fontWeight: 600 }}>● Shaded area = Typical Healthy Range</span>
+        <span style={{ fontSize: 11, color: 'var(--primary)', fontWeight: 600 }}>● Shaded area = Typical Healthy Range</span>
       </div>
       <div className={styles.insightSection}>
         <span className={styles.chartBadge} style={{ backgroundColor: statusColor }}>{status}</span>

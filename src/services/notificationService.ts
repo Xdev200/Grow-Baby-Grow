@@ -61,4 +61,15 @@ export class NotificationService {
   }
 }
 
+/**
+ * Generates a consistent 32-bit positive integer notification ID from a string ID (e.g., vaccineId).
+ */
+export const generateNotificationId = (id: string): number => {
+  return Math.abs(id.split('').reduce((a, b) => {
+    a = ((a << 5) - a) + b.charCodeAt(0);
+    return a & a;
+  }, 0));
+};
+
 export const notificationService = new NotificationService();
+

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useChild } from '../../context/ChildContext';
+import { getChildEmoji } from '../../utils/childHelpers';
 import styles from './GlobalHeader.module.css';
 
 export const GlobalHeader: React.FC = () => {
@@ -14,11 +15,7 @@ export const GlobalHeader: React.FC = () => {
   // In quiz screen, hide global header to avoid distractions during assessment
   if (location.pathname === '/quiz') return null;
 
-  const getChildEmoji = (gender: string) => {
-    if (gender === 'girl') return '👧';
-    if (gender === 'boy') return '👦';
-    return '👶';
-  };
+
 
   return (
     <>

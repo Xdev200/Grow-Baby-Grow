@@ -1,23 +1,19 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
+import { useToast } from '../context/ToastContext';
 import { GrowthChart } from '../components/growth/GrowthChart';
-import { calculateAge } from '../utils/age';
 import styles from '../components/growth/Growth.module.css';
 
 export const GrowthScreen: React.FC = () => {
-  const { activeChild, updateGrowth } = useChild();
+  const { activeChild, ageData, updateGrowth } = useChild();
+  const { showToast } = useToast();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'weight' | 'height'>('weight');
   const [isEditing, setIsEditing] = useState(false);
-  
-  const ageData = useMemo(() => {
-    if (!activeChild) return null;
-    return calculateAge(new Date(activeChild.dob), activeChild.gestationalWeeks);
-  }, [activeChild]);
 
-  const currentWeightVal = activeChild.currentWeightKg ?? activeChild.birthWeightKg ?? 3.3;
-  const currentHeightVal = activeChild.currentHeightCm ?? activeChild.birthHeightCm ?? 49.9;
+  const currentWeightVal = activeChild?.currentWeightKg ?? activeChild?.birthWeightKg ?? 3.3;
+  const currentHeightVal = activeChild?.currentHeightCm ?? activeChild?.birthHeightCm ?? 49.9;
 
   const [editWeight, setEditWeight] = useState(currentWeightVal.toString());
   const [editHeight, setEditHeight] = useState(currentHeightVal.toString());
@@ -53,11 +49,22 @@ export const GrowthScreen: React.FC = () => {
   };
 
   const handleSave = async () => {
-    await updateGrowth(
-      editWeight ? parseFloat(editWeight) : currentWeightVal,
-      editHeight ? parseFloat(editHeight) : currentHeightVal
-    );
+    const w = editWeight ? parseFloat(editWeight) : currentWeightVal;
+    const h = editHeight ? parseFloat(editHeight) : currentHeightVal;
+
+    if (isNaN(w) || w < 0.5 || w > 30) {
+      showToast({ status: 'warning', title: 'Invalid Weight', message: 'Weight must be between 0.5 kg and 30 kg' });
+      return;
+    }
+
+    if (isNaN(h) || h < 20 || h > 120) {
+      showToast({ status: 'warning', title: 'Invalid Height', message: 'Height/Length must be between 20 cm and 120 cm' });
+      return;
+    }
+
+    await updateGrowth(w, h);
     setIsEditing(false);
+    showToast({ status: 'success', title: 'Growth Updated', message: 'Growth measurements saved successfully' });
   };
 
   return (

@@ -57,7 +57,7 @@
 }
 
 .chipActive {
-  background: var(--emerald);
+  background: var(--primary);
   color: white;
 }
 
@@ -80,7 +80,7 @@
 
 .milestoneItem:active {
   background: #f0fdf4;
-  border-color: var(--emerald);
+  border-color: var(--primary);
 }
 
 .milestoneText {
@@ -101,6 +101,6 @@
 }
 
 .logButtonAchieved {
-  background: var(--emerald);
+  background: var(--primary);
   color: white;
 }

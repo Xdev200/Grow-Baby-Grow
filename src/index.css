@@ -8,7 +8,6 @@
   --secondary: #3b82f6;
   --amber: #f59e0b;
   --coral: #f43f5e;
-  --emerald: #10b981; /* Alias for nav compatibility */
   --danger: #ef4444;
   --danger-dark: #dc2626;
   --slate-50: #f8fafc;
@@ -95,6 +94,8 @@ h1, h2, h3, h4, .font-display {
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-lg);
+  padding-bottom: var(--nav-total-height, 80px);
+  flex: 1;
 }
 
 /* On mobile, go full width - no max-width constraint */

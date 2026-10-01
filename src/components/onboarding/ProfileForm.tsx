@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import type { Child } from '../../types';
 import { calculateAge, getLocalISODate } from '../../utils/age';
+import { generateId } from '../../utils/id';
 import styles from './Onboarding.module.css';
 
 interface ProfileFormProps {
@@ -36,16 +37,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSubmit }) => {
     e.preventDefault();
     if (!name.trim()) return;
 
-    // Use crypto.randomUUID if available, else fallback for older mobile browsers
-    const generateId = () => {
-      if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-        return crypto.randomUUID();
-      }
-      return `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    };
-
     const newChild: Child = {
-      id: generateId(),
+      id: generateId('child'),
       name: name.trim(),
       dob,
       gender,

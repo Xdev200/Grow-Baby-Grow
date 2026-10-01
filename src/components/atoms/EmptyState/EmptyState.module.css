@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 36px 20px;
+  background-color: var(--white, #ffffff);
+  border-radius: var(--radius-lg, 16px);
+  border: 1px dashed var(--slate-200, #e2e8f0);
+  margin: 16px 0;
+}
+
+.icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate-800, #1e293b);
+  margin: 0 0 6px 0;
+}
+
+.message {
+  font-size: 14px;
+  color: var(--slate-600, #475569);
+  max-width: 320px;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.actionBtn {
+  background-color: var(--primary, #10b981);
+  color: var(--white, #ffffff);
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-xl, 28px);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  background-color: var(--primary-dark, #059669);
+  transform: translateY(-1px);
+}

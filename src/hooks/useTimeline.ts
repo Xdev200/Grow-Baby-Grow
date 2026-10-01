@@ -1,12 +1,11 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useChild } from '../context/ChildContext';
-import { calculateAge } from '../utils/age';
 import { storageService } from '../services/storage';
 import type { MilestoneLog } from '../types';
 import { PROCESSED_MILESTONES as ALL_MILESTONES } from '../data/milestoneProcessor';
 
 export const useTimeline = () => {
-  const { activeChild } = useChild();
+  const { activeChild, ageData } = useChild();
   const [milestoneLogs, setMilestoneLogs] = useState<MilestoneLog[]>([]);
 
   useEffect(() => {
@@ -16,9 +15,8 @@ export const useTimeline = () => {
   }, [activeChild]);
 
   const info = useMemo(() => {
-    if (!activeChild) return { timelineData: [], assessmentAgeMonths: 0, childAgeMonths: 0, milestoneLogs: [] };
+    if (!activeChild || !ageData) return { timelineData: [], assessmentAgeMonths: 0, childAgeMonths: 0, milestoneLogs: [] };
 
-    const ageData = calculateAge(new Date(activeChild.dob), activeChild.gestationalWeeks);
     const assessmentAge = ageData.assessmentAgeMonths;
 
     // Return milestones up to 36 months to allow scrolling

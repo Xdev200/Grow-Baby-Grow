@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChild } from '../context/ChildContext';
-import { calculateAge } from '../utils/age';
 import { storageService } from '../services/storage';
 import type { Domain, MilestoneLog } from '../types';
 import { PROCESSED_MILESTONES as ALL_MILESTONES } from '../data/milestoneProcessor';
@@ -15,14 +14,9 @@ export interface DomainProgress {
 }
 
 export const useAssessment = () => {
-  const { activeChild } = useChild();
+  const { activeChild, ageData } = useChild();
   const { t } = useTranslation();
   const [logs, setLogs] = useState<MilestoneLog[]>([]);
-
-  const ageData = useMemo(() => {
-    if (!activeChild) return null;
-    return calculateAge(new Date(activeChild.dob), activeChild.gestationalWeeks);
-  }, [activeChild]);
 
   useEffect(() => {
     if (activeChild) {
@@ -72,7 +66,7 @@ export const useAssessment = () => {
     });
   }, [ageData, logs]);
 
-  const refreshLogs = React.useCallback(() => {
+  const refreshLogs = useCallback(() => {
     if (activeChild) {
       storageService.getMilestoneLogs(activeChild.id).then(setLogs);
     }

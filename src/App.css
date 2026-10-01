@@ -6,8 +6,3 @@
   flex-direction: column;
 }
 
-.app-layout {
-  /* Space for fixed bottom nav + safe area */
-  padding-bottom: var(--nav-total-height, 80px);
-  flex: 1;
-}

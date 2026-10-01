@@ -7,12 +7,20 @@ import { DomainCard } from '../components/dashboard/DomainCard';
 import { RedFlagBanner } from '../components/dashboard/RedFlagBanner';
 import { DomainDetailModal } from '../components/dashboard/DomainDetailModal';
 import { VaccineCatchupModal } from '../components/vaccination/CatchupModal';
+import { ChildHeroSection } from '../components/dashboard/ChildHeroSection';
+import { AssessmentSummary } from '../components/dashboard/AssessmentSummary';
+import { DashboardStats } from '../components/dashboard/DashboardStats';
+import { MilestoneSnapshot } from '../components/dashboard/MilestoneSnapshot';
+import { FAB } from '../components/atoms/FAB/FAB';
 import { storageService } from '../services/storage';
-import { vaccineService } from '../services/vaccineService';
+import { generateClinicalReport } from '../services/report';
+import { preferencesService } from '../services/preferencesService';
+import { vaccineService, isBirthDose } from '../services/vaccineService';
 import { PROCESSED_MILESTONES } from '../data/milestoneProcessor';
 import { calculateAge } from '../utils/age';
+import { getChildEmoji } from '../utils/childHelpers';
 import { formatDistanceToNow, startOfDay, isAfter } from 'date-fns';
-import type { Domain, MilestoneMaster, VaccineLog } from '../types';
+import type { Domain, MilestoneMaster, MilestoneLog, VaccineMaster, VaccineLog } from '../types';
 import styles from '../components/dashboard/Dashboard.module.css';
 
 interface RecentAssessment {
@@ -40,7 +48,7 @@ export const DashboardScreen: React.FC = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
-  const [logs, setLogs] = useState<any[]>([]);
+  const [logs, setLogs] = useState<MilestoneLog[]>([]);
   const [hasCheckedLogs, setHasCheckedLogs] = useState(false);
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
   const [childStats, setChildStats] = useState<Record<string, ChildCardStats>>({});
@@ -49,34 +57,36 @@ export const DashboardScreen: React.FC = () => {
   const [recentAssessment, setRecentAssessment] = useState<RecentAssessment | null>(null);
   const [activeMilestoneTab, setActiveMilestoneTab] = useState<'upcoming' | 'latest'>('upcoming');
   const [showCatchupModal, setShowCatchupModal] = useState(false);
-  const [catchupVaccines, setCatchupVaccines] = useState<{ vaccine: any; dueDate: Date }[]>([]);
+  const [catchupVaccines, setCatchupVaccines] = useState<{ vaccine: VaccineMaster; dueDate: Date }[]>([]);
 
-  // Trigger vaccine catch-up drawer after 30 seconds of completion of 1st assessment
+  // Trigger vaccine catch-up drawer after 30 seconds of completion of milestone assessment and when next vaccine is due
   useEffect(() => {
     if (!activeChild) return;
 
-    const firstCompletedStr = localStorage.getItem(`first_assessment_completed_at_${activeChild.id}`);
-    const hasVisited = localStorage.getItem(`vax_visited_${activeChild.id}`);
+    const completedStr = preferencesService.getLastAssessmentCompletedAt(activeChild.id);
+    const hasVisited = preferencesService.getVaccineVisited(activeChild.id);
 
-    if (firstCompletedStr && !hasVisited) {
-      const completedTime = parseInt(firstCompletedStr, 10);
+    if (completedStr && !hasVisited) {
+      const completedTime = new Date(completedStr).getTime();
+      if (isNaN(completedTime)) return;
+
       const elapsed = Date.now() - completedTime;
       const delay = Math.max(0, 30000 - elapsed);
 
       const timer = setTimeout(async () => {
         try {
-          const vaxLogs = await storageService.getVaccineLogs(activeChild.id);
-          const vaxVisitedCheck = localStorage.getItem(`vax_visited_${activeChild.id}`);
-          if (vaxLogs.length === 0 && !vaxVisitedCheck) {
+          const vaxVisitedCheck = preferencesService.getVaccineVisited(activeChild.id);
+          if (!vaxVisitedCheck) {
             const data = await vaccineService.getVaccineSchedule(activeChild);
             const today = startOfDay(new Date());
-            const pastOrBirth = data.filter(item => {
-              const isBirth = item.ageWeeks === 0 || item.ageLabel.toLowerCase().includes('birth');
-              return isBirth || !isAfter(item.dueDate, today);
+            const dueVaccines = data.filter(item => {
+              const isLogDone = item.log?.status === 'completed';
+              if (isLogDone) return false;
+              return isBirthDose(item) || !isAfter(item.dueDate, today);
             }).map(item => ({ vaccine: item, dueDate: item.dueDate }));
 
-            if (pastOrBirth.length > 0) {
-              setCatchupVaccines(pastOrBirth);
+            if (dueVaccines.length > 0) {
+              setCatchupVaccines(dueVaccines);
               setShowCatchupModal(true);
             }
           }
@@ -94,13 +104,13 @@ export const DashboardScreen: React.FC = () => {
     for (const log of vaxLogs) {
       await storageService.saveVaccineLog(log);
     }
-    localStorage.setItem(`vax_visited_${activeChild.id}`, 'true');
+    preferencesService.setVaccineVisited(activeChild.id);
     setShowCatchupModal(false);
   };
 
   const handleCatchupClose = () => {
     if (activeChild) {
-      localStorage.setItem(`vax_visited_${activeChild.id}`, 'true');
+      preferencesService.setVaccineVisited(activeChild.id);
     }
     setShowCatchupModal(false);
   };
@@ -176,8 +186,7 @@ export const DashboardScreen: React.FC = () => {
           const vaxSchedule = await vaccineService.getVaccineSchedule(c);
           pendingVaccines = vaxSchedule.filter(v => {
             if (v.log?.status === 'completed') return false;
-            const isBirth = v.ageWeeks === 0 || v.ageLabel.toLowerCase().includes('birth');
-            return isBirth || !isAfter(v.dueDate, today);
+            return isBirthDose(v) || !isAfter(v.dueDate, today);
           }).length;
         } catch (e) {
           console.error(e);
@@ -274,11 +283,8 @@ export const DashboardScreen: React.FC = () => {
     m => m.ageMonths === nextAssessmentStageAge && !logs.some(l => l.milestoneId === m.id && l.status === 'achieved')
   );
 
-  const getChildEmoji = (gender: string) => {
-    if (gender === 'girl') return '👧';
-    if (gender === 'boy') return '👦';
-    return '👶';
-  };
+
+
 
   return (
     <div className={styles.dashboardContainer}>
@@ -314,169 +320,20 @@ export const DashboardScreen: React.FC = () => {
         </div>
       </header>
 
-      {/* Multi-child Hero Section: full width card per child with expandable details */}
-      <section className={styles.heroSection}>
-        <div className={styles.heroHeader}>
-          <h2 className={styles.heroSectionTitle}>Children ({children.length})</h2>
-          <button
-            type="button"
-            className={styles.heroAddChildBtn}
-            onClick={() => navigate('/onboarding')}
-            title="Register another child"
-          >
-            <span>➕</span>
-            <span>Add Child</span>
-          </button>
-        </div>
+      {/* Multi-child Hero Section */}
+      <ChildHeroSection
+        childrenList={children}
+        activeChild={activeChild}
+        childStats={childStats}
+        expandedChildId={expandedChildId}
+        onSelectChild={selectChild}
+        onToggleExpand={(id) => setExpandedChildId(expandedChildId === id ? null : id)}
+        onAddChild={() => navigate('/onboarding')}
+      />
 
-        <div className={styles.heroChildList}>
-          {children.map(child => {
-            const isActive = child.id === activeChild.id;
-            const isExpanded = expandedChildId === child.id;
-            const cAge = calculateAge(new Date(child.dob), child.gestationalWeeks);
-            const stats = childStats[child.id] || {
-              achieved: 0,
-              redFlags: 0,
-              pendingVaccines: 0,
-              weight: child.currentWeightKg ?? child.birthWeightKg ?? null,
-              height: child.currentHeightCm ?? child.birthHeightCm ?? null,
-              lastEntry: 'No entries yet'
-            };
-
-            return (
-              <div
-                key={child.id}
-                className={`${styles.childHeroCard} ${isActive ? styles.childHeroCardActive : ''}`}
-              >
-                <div
-                  className={styles.cardMainRow}
-                  onClick={() => selectChild(child.id)}
-                  title={isActive ? undefined : "Switch active child"}
-                >
-                  <div className={styles.childInfo}>
-                    <div className={styles.heroAvatar}>{getChildEmoji(child.gender)}</div>
-                    <div>
-                      <div className={styles.nameBadgeRow}>
-                        <h3 className={styles.heroName}>{child.name}</h3>
-                        {isActive ? (
-                          <span className={styles.activeBadge}>Active</span>
-                        ) : (
-                          <span className={styles.switchBadge}>Tap to select</span>
-                        )}
-                      </div>
-                      <p className={styles.heroAge}>{cAge.displayAge}</p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    className={styles.expandToggleBtn}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setExpandedChildId(isExpanded ? null : child.id);
-                    }}
-                    aria-label={isExpanded ? "Collapse details" : "Expand details"}
-                  >
-                    <span className={styles.expandLabel}>{isExpanded ? 'Less' : 'Details'}</span>
-                    <span className={`${styles.chevron} ${isExpanded ? styles.chevronOpen : ''}`}>▼</span>
-                  </button>
-                </div>
-
-                {/* Primary KPI status: milestones, red flags, pending vaccines */}
-                <div className={styles.heroSummaryRow}>
-                  <div className={styles.summaryBadge}>
-                    <span className={styles.badgeIcon}>🎯</span>
-                    <span className={styles.badgeText}>
-                      <strong>{stats.achieved}</strong> milestones
-                    </span>
-                  </div>
-
-                  <div className={`${styles.summaryBadge} ${stats.redFlags > 0 ? styles.redFlagBadge : styles.neutralBadge}`}>
-                    <span className={styles.badgeIcon}>{stats.redFlags > 0 ? '⚠️' : '✓'}</span>
-                    <span className={styles.badgeText}>
-                      <strong>{stats.redFlags}</strong> {stats.redFlags === 1 ? 'red flag' : 'red flags'}
-                    </span>
-                  </div>
-
-                  <div className={`${styles.summaryBadge} ${stats.pendingVaccines > 0 ? styles.pendingVaxBadge : styles.neutralBadge}`}>
-                    <span className={styles.badgeIcon}>{stats.pendingVaccines > 0 ? '💉' : '✓'}</span>
-                    <span className={styles.badgeText}>
-                      {stats.pendingVaccines > 0
-                        ? `${stats.pendingVaccines} ${stats.pendingVaccines === 1 ? 'vaccine' : 'vaccines'} pending...`
-                        : 'Vaccines up to date'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Expandable details: weight, height, last entry, latest achieved & next target */}
-                {isExpanded && (
-                  <div className={styles.expandedDetails}>
-                    <div className={styles.expandDetailGrid}>
-                      <div className={styles.expandDetailItem}>
-                        <span className={styles.detailItemLabel}>Weight</span>
-                        <span className={styles.detailItemVal}>
-                          {stats.weight ? `${stats.weight} kg` : '--'}
-                        </span>
-                      </div>
-                      <div className={styles.expandDetailItem}>
-                        <span className={styles.detailItemLabel}>Height / Length</span>
-                        <span className={styles.detailItemVal}>
-                          {stats.height ? `${stats.height} cm` : '--'}
-                        </span>
-                      </div>
-                      <div className={styles.expandDetailItem}>
-                        <span className={styles.detailItemLabel}>Last Entry</span>
-                        <span className={styles.detailItemVal}>{stats.lastEntry}</span>
-                      </div>
-                      <div className={styles.expandDetailItem} style={{ gridColumn: 'span 3' }}>
-                        <span className={styles.detailItemLabel}>Latest Achieved Milestone</span>
-                        <span className={styles.detailItemVal} style={{ fontSize: '12px' }}>
-                          {stats.latestAchievedTitle ? `✓ ${stats.latestAchievedTitle}` : 'None logged yet'}
-                        </span>
-                      </div>
-                      <div className={styles.expandDetailItem} style={{ gridColumn: 'span 3' }}>
-                        <span className={styles.detailItemLabel}>Next Target Milestone</span>
-                        <span className={styles.detailItemVal} style={{ fontSize: '12px' }}>
-                          {stats.nextUpcomingTitle ? `🎯 ${stats.nextUpcomingTitle}` : 'All age targets met!'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Persistent Recent Assessment Section (replaces back-to-dashboard requirement) */}
+      {/* Persistent Recent Assessment Summary */}
       {recentAssessment && (
-        <section className={styles.assessmentSection}>
-          <div className={styles.assessmentHeader}>
-            <h3 className={styles.assessmentTitle}>Recent Assessment Status</h3>
-            <span className={`${styles.assessmentStatusBadge} ${styles[`status_${recentAssessment.status}`]}`}>
-              {recentAssessment.status === 'on_track' ? 'On Track' : recentAssessment.status === 'watch' ? 'Watch & Stimulate' : 'Review Advised'}
-            </span>
-          </div>
-          <p className={styles.assessmentMessage}>
-            {recentAssessment.status === 'on_track'
-              ? `${activeChild.name} is progressing smoothly according to clinical milestones.`
-              : 'Review stimulation recommendations below and practice with your child.'}
-          </p>
-
-          {(recentAssessment.redFlags.length > 0 || recentAssessment.watchItems.length > 0) && (
-            <div className={styles.recommendationsList}>
-              {[...recentAssessment.redFlags, ...recentAssessment.watchItems].slice(0, 3).map((item, idx) => (
-                <div key={idx} className={styles.recommendationCard}>
-                  <p className={styles.recMilestone}>{item.milestone}</p>
-                  <p className={styles.recSuggestion}>
-                    {item.suggestion || item.laymanDescription || 'Encourage playtime and activities to support this milestone.'}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+        <AssessmentSummary recentAssessment={recentAssessment} activeChild={activeChild} />
       )}
 
       {hasCheckedLogs && logs.length === 0 ? (
@@ -495,95 +352,26 @@ export const DashboardScreen: React.FC = () => {
         <>
           <RedFlagBanner
             flags={triggeredRedFlags}
+            onDownload={() => {
+              if (activeChild && ageData) {
+                generateClinicalReport(activeChild, logs, ageData.displayAge, ageData.assessmentAgeMonths);
+              }
+            }}
           />
 
-          <div className={styles.statsRow}>
-            <div className={styles.statBox}>
-              <span className={styles.statVal}>{totalAchieved}</span>
-              <span className={styles.statLabel}>{t('dashboard.milestones_achieved')}</span>
-            </div>
-            <div className={styles.statBox}>
-              <span className={styles.statVal} style={{ color: triggeredRedFlags.length > 0 ? 'var(--coral)' : 'var(--primary)' }}>
-                {triggeredRedFlags.length}
-              </span>
-              <span className={styles.statLabel}>{t('dashboard.red_flags')}</span>
-            </div>
-          </div>
+          <DashboardStats
+            totalAchieved={totalAchieved}
+            redFlagsCount={triggeredRedFlags.length}
+          />
 
-          {/* Milestone Progress Snapshot (Tabbed Full-Width Card: Upcoming Stage & Latest Achieved) */}
-          <div className={styles.milestoneHighlightSection}>
-            <div className={styles.sectionHeader}>
-              <h3>Milestone Snapshot for {activeChild.name}</h3>
-              <p className={styles.helperText}>Upcoming stage targets & latest achieved milestones</p>
-            </div>
-
-            <div className={styles.tabbedCard}>
-              <div className={styles.tabHeader}>
-                <button
-                  type="button"
-                  className={`${styles.tabButton} ${activeMilestoneTab === 'upcoming' ? `${styles.tabButtonActive} ${styles.tabButtonActiveUpcoming}` : ''}`}
-                  onClick={() => setActiveMilestoneTab('upcoming')}
-                >
-                  <span>🎯</span> Upcoming Milestones ({nextStageLabel})
-                  <span className={styles.tabBadge}>{upcomingStageMilestones.length}</span>
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.tabButton} ${activeMilestoneTab === 'latest' ? `${styles.tabButtonActive} ${styles.tabButtonActiveAchieved}` : ''}`}
-                  onClick={() => setActiveMilestoneTab('latest')}
-                >
-                  <span>✓</span> Last Achieved
-                  <span className={styles.tabBadge}>{latestAchievedMilestones.length}</span>
-                </button>
-              </div>
-
-              <div className={styles.tabContent}>
-                {activeMilestoneTab === 'upcoming' ? (
-                  <>
-                    <div className={styles.targetStageSubheader}>
-                      <span>Milestones expected at next assessment stage ({nextStageLabel}):</span>
-                      <span className={styles.targetStageBadge}>{nextStageLabel}</span>
-                    </div>
-                    <div className={styles.highlightCardList}>
-                      {upcomingStageMilestones.length > 0 ? (
-                        upcomingStageMilestones.map(m => (
-                          <div key={m.id} className={styles.highlightCardItem}>
-                            <div className={styles.highlightItemMeta}>
-                              <span className={styles.domainChip}>{m.domain.replace('_', ' ')}</span>
-                              <span className={styles.ageChip}>{m.ageMonths}m</span>
-                            </div>
-                            <p className={styles.highlightItemText}>{m.milestone}</p>
-                          </div>
-                        ))
-                      ) : (
-                        <p className={styles.emptyText} style={{ margin: 0, fontSize: '12px' }}>
-                          All target milestones for {nextStageLabel} achieved!
-                        </p>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <div className={styles.highlightCardList}>
-                    {latestAchievedMilestones.length > 0 ? (
-                      latestAchievedMilestones.map(m => (
-                        <div key={m.id} className={styles.highlightCardItem}>
-                          <div className={styles.highlightItemMeta}>
-                            <span className={styles.domainChip}>{m.domain.replace('_', ' ')}</span>
-                            <span className={styles.ageChip}>{m.ageMonths}m</span>
-                          </div>
-                          <p className={styles.highlightItemText}>{m.milestone}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p className={styles.emptyText} style={{ margin: 0, fontSize: '12px' }}>
-                        No milestones logged as achieved yet.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <MilestoneSnapshot
+            childName={activeChild.name}
+            activeTab={activeMilestoneTab}
+            nextStageLabel={nextStageLabel}
+            upcomingMilestones={upcomingStageMilestones}
+            latestAchievedMilestones={latestAchievedMilestones}
+            onTabChange={setActiveMilestoneTab}
+          />
 
           <div className={styles.sectionHeader}>
             <div>
@@ -639,13 +427,10 @@ export const DashboardScreen: React.FC = () => {
         />
       )}
 
-      <button
-        className={styles.fab}
-        title={t('dashboard.new_assessment')}
+      <FAB
+        ariaLabel={t('dashboard.new_assessment')}
         onClick={() => navigate('/quiz')}
-      >
-        +
-      </button>
+      />
     </div>
   );
 };
